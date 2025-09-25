@@ -10,6 +10,21 @@ import {
   Svg,
   Rect,
 } from "@react-pdf/renderer";
+import EditLayout from "./editLayout";
+import PdfTemplateEditor from "./templateEditor";
+
+type ItemTuple = [string, number, string];
+
+interface ReportData {
+  customerName: string;
+  date: string;
+  items: ItemTuple[];
+  total: string;
+}
+
+interface ReportDocumentProps {
+  data: ReportData;
+}
 
 // ✅ Styles
 const styles = StyleSheet.create({
@@ -38,8 +53,7 @@ const styles = StyleSheet.create({
 });
 
 // ✅ PDF Document Component with Chart
-const ReportDocument = ({ data }) => {
-  // Prepare chart data
+const ReportDocument: React.FC<ReportDocumentProps> = ({ data }) => {
   const maxQty = Math.max(...data.items.map((i) => i[1]));
   const chartHeight = 100;
   const barWidth = 40;
@@ -57,7 +71,7 @@ const ReportDocument = ({ data }) => {
 
       <Page size="A4" style={styles.page}>
         <Text style={styles.header}>Page 2 - Items Table & Chart</Text>
-        {/* Table */}
+
         {data.items.map((item, idx) => (
           <Text key={idx}>
             {item[0]} - {item[1]} pcs - {item[2]}
@@ -93,9 +107,9 @@ const ReportDocument = ({ data }) => {
   );
 };
 
-// ✅ Main Component
-export default function ReportPDFViewer() {
-  const reportData = {
+
+const ReportPDFViewer: React.FC = () => {
+  const reportData: ReportData = {
     customerName: "John Doe",
     date: "2025-09-23",
     items: [
@@ -108,7 +122,7 @@ export default function ReportPDFViewer() {
 
   return (
     <div style={{ height: "100vh" }}>
-      <PDFViewer width="100%" height="90%">
+      {/* <PDFViewer width="100%" height="90%">
         <ReportDocument data={reportData} />
       </PDFViewer>
 
@@ -119,7 +133,11 @@ export default function ReportPDFViewer() {
         >
           {({ loading }) => (loading ? "Generating PDF..." : "Download PDF")}
         </PDFDownloadLink>
-      </div>
+      </div> */}
+      {/* <EditLayout/> */}
+      <PdfTemplateEditor/>
     </div>
   );
-}
+};
+
+export default ReportPDFViewer;

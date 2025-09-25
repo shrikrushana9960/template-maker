@@ -31,6 +31,12 @@ const App: React.FC = () => {
     ));
   }, [currentPageIndex]);
 
+    const handleLoadTemplate = useCallback((pages: PageData[]) => {
+    setPages(pages);
+    setCurrentPageIndex(0);
+    setActiveElement(null);
+    setActiveContainer(null);
+  }, []);
   const updateElement = useCallback((id: string, updates: Partial<ElementData>) => {
     setPages(prev => prev.map((page, index) => 
       index === currentPageIndex ? {
@@ -201,6 +207,7 @@ const App: React.FC = () => {
     try {
       await exportAsPdf(pages);
     } catch (error) {
+      console.error(error)
       setModal({
         title: 'Error',
         message: 'Failed to export PDF. Please try again.',
@@ -348,7 +355,7 @@ const App: React.FC = () => {
           activeContainer={activeContainer}
         />
 
-        <RightPanel
+       <RightPanel
           activeTab={activeTab}
           onTabChange={setActiveTab}
           activeElement={activeElement}
@@ -358,6 +365,8 @@ const App: React.FC = () => {
           onElementDelete={deleteElement}
           onLayoutChange={handleLayoutChange}
           activeContainer={activeContainer}
+          onLoadTemplate={handleLoadTemplate}
+          currentPages={pages} // Pass all pages
         />
       </div>
 

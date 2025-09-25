@@ -2,13 +2,35 @@ import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import type { PageData } from '../types';
 
+// Helper to check for and remove unsupported CSS color functions
+const normalizeColor = (color: string | undefined): string => {
+  if (!color) return 'white'; // Default fallback
+  
+  // Regex to check for unsupported color functions (e.g., oklch, lab, color)
+  const unsupportedRegex = /^(oklch|lab|color)\s*\(/i;
+  
+  if (unsupportedRegex.test(color)) {
+    // NOTE: In a real-world scenario, you might want to convert the color 
+    // using a more complex library. For a simple fix, we'll use a standard fallback.
+    // If you know the hex equivalent, you can return it here.
+    console.warn(`Unsupported color function detected: ${color}. Falling back to #F8FAFC.`);
+    return '#F8FAFC'; // A known, safe color (e.g., slate-50)
+  }
+  
+  return color;
+};
+
 export const renderPageForExport = async (pageData: PageData): Promise<string> => {
   const tempDiv = document.createElement('div');
+  
+  // 1. NORMALIZE BACKGROUND COLOR HERE
+  const safeBackgroundColor = normalizeColor(pageData.backgroundColor);
+  
   tempDiv.style.width = '794px';
   tempDiv.style.height = '1123px';
   tempDiv.style.position = 'absolute';
   tempDiv.style.left = '-9999px';
-  tempDiv.style.background = pageData.backgroundColor;
+  tempDiv.style.background = safeBackgroundColor; // Use safe color
   tempDiv.style.padding = '16px';
   tempDiv.style.boxSizing = 'border-box';
   
@@ -20,13 +42,16 @@ export const renderPageForExport = async (pageData: PageData): Promise<string> =
 
   const uniqueCells = [...new Set(layoutData.cells.flat())];
   const cellDivs: { [key: string]: HTMLDivElement } = {};
+  
+  // 2. NORMALIZE GRID/CELL COLOR HERE
+  const safeGridColor = normalizeColor(pageData.gridColor);
 
   uniqueCells.forEach((cell:any) => {
     const cellDiv = document.createElement('div');
     cellDiv.className = 'dashboard-item-export';
     cellDiv.style.gridArea = cell.toLowerCase();
     cellDiv.id = `export-${cell}`;
-    cellDiv.style.backgroundColor = pageData.gridColor;
+    cellDiv.style.backgroundColor = safeGridColor; // Use safe color
     cellDiv.style.border = 'none';
     cellDiv.style.boxShadow = 'none';
     cellDiv.style.minHeight = '200px';
@@ -86,7 +111,12 @@ export const renderPageForExport = async (pageData: PageData): Promise<string> =
   });
   
   document.body.appendChild(tempDiv);
-  await new Promise(resolve => setTimeout(resolve, 500));
+  console.log(tempDiv)
+  
+  // You can safely remove this `setTimeout` as html2canvas typically handles this.
+  // await new Promise(resolve => setTimeout(resolve, 500)); 
+  
+  // NOTE: If issues persist, try setting scale: 1 or removing it entirely.
   const canvas = await html2canvas(tempDiv, { scale: 2 });
   const imgData = canvas.toDataURL('image/png');
   document.body.removeChild(tempDiv);
@@ -94,8 +124,11 @@ export const renderPageForExport = async (pageData: PageData): Promise<string> =
 };
 
 export const exportAsPdf = async (pages: PageData[]) => {
+  // NOTE: The jspdf hotfix is non-standard. It's safe to keep but check documentation 
+  // if you upgrade jspdf and run into issues.
   const doc = new jsPDF({ unit: 'px', format: 'a4', hotfixes: ['px_scaling'] as any });
   
+  console.log(pages)
   for (let i = 0; i < pages.length; i++) {
     if (i > 0) {
       doc.addPage();

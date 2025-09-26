@@ -45,16 +45,19 @@ const Toolbar: React.FC<ToolbarProps> = ({
   const elementButtons = [
     { type: 'header', label: 'Header', icon: 'M4 12h16M12 4v16' },
     { type: 'text', label: 'Text', icon: 'M4 12h16M16 8h-8M16 16h-8' },
-    { type: 'image', label: 'Image', icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10' },
-    { type: 'table', label: 'Table', icon: 'M12 2v20M2 7h20M2 17h20M7 2v20M17 2v20' },
-    { type: 'chart', chartType: 'bar', label: 'Bar Chart', icon: 'M18 20V10M12 20V4M6 20v-6' },
-    { type: 'chart', chartType: 'line', label: 'Line Chart', icon: 'M22 12h-4l-3 9L9 3l-3 9H2' },
+    // { type: 'image', label: 'Image', icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10' },
+    // { type: 'table', label: 'Table', icon: 'M12 2v20M2 7h20M2 17h20M7 2v20M17 2v20' },
+    // { type: 'chart', chartType: 'bar', label: 'Bar Chart', icon: 'M18 20V10M12 20V4M6 20v-6' },
+    // { type: 'chart', chartType: 'line', label: 'Line Chart', icon: 'M22 12h-4l-3 9L9 3l-3 9H2' },
   ];
 
   return (
     <div className="bg-white shadow-md z-20">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-6">
+
+        <h1 className="text-xl font-semibold text-gray-800">PDF Template Editor</h1>
+
           {/* File Section */}
           <div className="flex flex-col items-center">
             <span className="text-xs font-semibold text-gray-500">File</span>
@@ -72,7 +75,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 <span className="text-xs text-gray-700 mt-1">New</span>
               </button>
               
-              <button
+              {/* Temporary comment */}
+              {/* <button
                 onClick={handleImportClick}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
               >
@@ -80,17 +84,17 @@ const Toolbar: React.FC<ToolbarProps> = ({
                   <path d="M12 2v10M12 22v-10M12 2a4 4 0 0 0-4 4v4H4v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10h-4V6a4 4 0 0 0-4-4z"/>
                 </svg>
                 <span className="text-xs text-gray-700 mt-1">Load</span>
-              </button>
+              </button> */}
               
-              <input
+              {/* <input
                 ref={fileInputRef}
                 type="file"
                 accept=".json"
                 className="hidden"
                 onChange={handleFileChange}
-              />
+              /> */}
               
-              <button
+              {/* <button
                 onClick={onSaveTemplate}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
               >
@@ -99,9 +103,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
                   <polyline points="17 21 17 13 7 13 7 21"/>
                 </svg>
                 <span className="text-xs text-gray-700 mt-1">Save</span>
-              </button>
+              </button> */}
               
-              <button
+              {/* <button
                 onClick={onExportPdf}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
               >
@@ -113,7 +117,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                   <line x1="10" y1="9" x2="10" y2="13"/>
                 </svg>
                 <span className="text-xs text-gray-700 mt-1">Export PDF</span>
-              </button>
+              </button> */}
             </div>
           </div>
           
@@ -193,16 +197,17 @@ const Toolbar: React.FC<ToolbarProps> = ({
           </div>
         </div>
 
-        <h1 className="text-xl font-semibold text-gray-800">PDF Template Editor</h1>
+        
 
-        <div className="flex items-center space-x-2">
+              {/* Temporary comment */}
+        {/* <div className="flex items-center space-x-2">
           <button
             onClick={onAutofill}
             className="px-4 py-2 text-sm font-medium text-white bg-yellow-600 rounded-md hover:bg-yellow-700"
           >
             Autofill
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

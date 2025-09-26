@@ -1,18 +1,3 @@
 {
-  "templates": [
-    {
-      "id": "sample-template",
-      "name": "Sample Template",
-      "createdAt": "2024-01-01T00:00:00.000Z",
-      "updatedAt": "2024-01-01T00:00:00.000Z",
-      "pages": "[{\"elements\":[{\"id\":\"header1\",\"type\":\"header\",\"x\":10,\"y\":10,\"width\":300,\"height\":40,\"containerId\":\"A\",\"data\":{\"text\":\"Sample Header\",\"color\":\"#000000\",\"fontSize\":\"24px\",\"isBold\":true,\"isItalic\":false,\"headerSize\":\"h1\"}},{\"id\":\"text1\",\"type\":\"text\",\"x\":10,\"y\":60,\"width\":300,\"height\":100,\"containerId\":\"A\",\"data\":{\"text\":\"This is sample text content.\",\"color\":\"#000000\",\"fontSize\":\"14px\",\"isBold\":false,\"isItalic\":false}},{\"id\":\"table1\",\"type\":\"table\",\"x\":10,\"y\":10,\"width\":350,\"height\":120,\"containerId\":\"B\",\"data\":{\"table\":[[\"Product\",\"Price\",\"Stock\"],[\"Widget A\",\"$29.99\",\"45\"],[\"Widget B\",\"$39.99\",\"23\"],[\"Widget C\",\"$19.99\",\"67\"]]}}],\"layout\":\"{\\\"cells\\\": [[\\\"A\\\", \\\"B\\\"]]}\",\"backgroundColor\":\"#ffffff\",\"gridColor\":\"#f8fafc\"}]"
-    },
-    {
-      "id": "sad",
-      "name": "sad",
-      "createdAt": "2025-09-25T20:16:15.701Z",
-      "updatedAt": "2025-09-25T20:16:15.701Z",
-      "pages": "[{\"elements\":[],\"layout\":\"{\\\"cells\\\":[[\\\"A\\\",\\\"B\\\"]]}\",\"backgroundColor\":\"#ffffff\",\"gridColor\":\"#f8fafc\"}]"
-    }
-  ]
+  "templates": []
 }

@@ -203,19 +203,33 @@ const App: React.FC = () => {
     reader.readAsText(file);
   };
 
-  const handleExportPdf = async () => {
-    try {
-      await exportAsPdf(pages);
-    } catch (error) {
-      console.error(error)
-      setModal({
-        title: 'Error',
-        message: 'Failed to export PDF. Please try again.',
-        type: 'info',
-        onConfirm: () => setModal(null)
-      });
-    }
-  };
+const handleExportPdf = async () => {
+  try {
+    setModal({
+      title: 'Exporting PDF',
+      message: 'Generating PDF... This may take a moment.',
+      type: 'info',
+      onConfirm: () => setModal(null)
+    });
+
+    await exportAsPdf(pages);
+    
+    setModal({
+      title: 'Success',
+      message: 'PDF exported successfully!',
+      type: 'info',
+      onConfirm: () => setModal(null)
+    });
+  } catch (error) {
+    console.error('PDF export error:', error);
+    setModal({
+      title: 'Export Error',
+      message: 'Failed to export PDF. The document may contain unsupported elements. Please try simplifying your template.',
+      type: 'info',
+      onConfirm: () => setModal(null)
+    });
+  }
+};
 
   const handleAddPage = () => {
     setPages(prev => [...prev, { ...defaultPage }]);

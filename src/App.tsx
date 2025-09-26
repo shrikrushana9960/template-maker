@@ -60,10 +60,12 @@ const App: React.FC = () => {
 
   const addElement = useCallback((type: string, chartType?: string) => {
     const layoutData = JSON.parse(currentPage.layout);
-    const uniqueCells = [...new Set(layoutData.cells.flat())];
+    console.log(layoutData,"layoutData");
+    
+    const uniqueCells  = [...new Set(layoutData.cells.flat())];
     
     // Use active container if set, otherwise use first available cell
-    let containerId :any = activeContainer;
+    let containerId = activeContainer;
     
     if (!containerId) {
       // If no active container, try to find a cell with fewer elements

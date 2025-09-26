@@ -17,6 +17,8 @@ export interface ElementData {
     table?: string[][];
     chartType?: string;
     chartData?: any;
+    labels?: string[];
+    datasets?: { data?: any, label?: string, backgroundColor?: string}[]
   };
 }
 

@@ -27,9 +27,10 @@ interface RightPanelProps {
 interface ModalConfig {
   title: string;
   message: string;
-  type: "info" | "confirm";
-  onConfirm: () => void;
+  type: "info" | "confirm" | "input";
+  onConfirm: (templateName: string) => void;
   onCancel?: () => void;
+  placeholder?: string;
 }
 
 const RightPanel: React.FC<RightPanelProps> = ({
@@ -109,7 +110,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
       message: "Enter a name for your template",
       type: "input",
       placeholder: "Template name",
-      onConfirm: async (templateName: string) => {
+      onConfirm: async (templateName) => {
         if (!templateName) return;
   
         setSaveLoading(true);
@@ -765,7 +766,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
               </label>
               <input
                 type="text"
-                value={(localElement.data.labels || []).join(", ")}
+                value={(localElement.data?.labels || []).join(", ")}
                 onChange={(e) =>
                   handleElementUpdate({
                     data: {
@@ -838,7 +839,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
                 type="color"
                 value={
                   (localElement.data.datasets?.[0]
-                    ?.backgroundColor as string) || "#36A2EB"
+                    ?.backgroundColor) || "#36A2EB"
                 }
                 onChange={(e) =>
                   handleElementUpdate({

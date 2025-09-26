@@ -2,7 +2,11 @@ import React, { useRef, useState, useEffect } from "react";
 import Chart from "react-apexcharts";
 import { toPng } from "html-to-image";
 
-export default function ChartToImage({ onImageReady }) {
+interface ChartToImageProps {
+  onImageReady: (dataUrl: string) => void;
+}
+
+export default function ChartToImage({ onImageReady }: ChartToImageProps) {
   const chartRef = useRef<HTMLDivElement>(null);
 
   const chartOptions = {

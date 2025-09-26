@@ -7,6 +7,10 @@ import {
   checkServerStatus,
   type Template,
 } from "../utils/serverApi";
+import Modal from "./Modal";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+
 interface RightPanelProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
@@ -16,8 +20,16 @@ interface RightPanelProps {
   onElementUpdate: (id: string, updates: Partial<ElementData>) => void;
   onElementDelete: (id: string) => void;
   onLayoutChange: (layout: string) => void;
-  onLoadTemplate: any;
-  currentPages: any;
+  onLoadTemplate: (pages: PageData[]) => void;
+  currentPages: PageData[];
+}
+
+interface ModalConfig {
+  title: string;
+  message: string;
+  type: "info" | "confirm";
+  onConfirm: () => void;
+  onCancel?: () => void;
 }
 
 const RightPanel: React.FC<RightPanelProps> = ({
@@ -39,6 +51,30 @@ const RightPanel: React.FC<RightPanelProps> = ({
   >("checking");
   const [loading, setLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
+  const [modal, setModal] = useState<ModalConfig | null>(null);
+
+  // ✅ Snackbar toast state
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastSeverity, setToastSeverity] =
+    useState<"success" | "error" | "info" | "warning">("info");
+
+  const showToast = (
+    message: string,
+    severity: "success" | "error" | "info" | "warning" = "info"
+  ) => {
+    setToastMessage(message);
+    setToastSeverity(severity);
+    setToastOpen(true);
+  };
+
+  const handleToastClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") return;
+    setToastOpen(false);
+  };
 
   useEffect(() => {
     if (activeTab === "server") {
@@ -61,65 +97,96 @@ const RightPanel: React.FC<RightPanelProps> = ({
     } catch (error) {
       console.error("Failed to load templates:", error);
       setTemplates([]);
+      showToast("Failed to load templates", "error");
     } finally {
       setLoading(false);
     }
   };
 
   const handleSaveTemplate = async () => {
-    const templateName = prompt("Enter a name for your template:");
-    if (!templateName?.trim()) return;
+    setModal({
+      title: "Save Template",
+      message: "Enter a name for your template",
+      type: "input",
+      placeholder: "Template name",
+      onConfirm: async (templateName: string) => {
+        if (!templateName) return;
+  
+        setSaveLoading(true);
+        try {
+          await saveTemplateToServer(templateName, currentPages);
+          await loadTemplates();
+          setModal(null);
+          showToast(`Template "${templateName}" saved successfully!`, "success");
+        } catch (error) {
+          setModal(null);
+          showToast(
+            `Failed to save template: ${
+              error instanceof Error ? error.message : "Unknown error"
+            }`,
+            "error"
+          );
+        } finally {
+          setSaveLoading(false);
+        }
+      },
+      onCancel: () => setModal(null),
+    });
+  };
+  
 
-    setSaveLoading(true);
-    try {
-      await saveTemplateToServer(templateName, currentPages);
-      await loadTemplates(); // Refresh the list
-      alert(`Template "${templateName}" saved successfully!`);
-    } catch (error) {
-      alert(
-        `Failed to save template: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`
-      );
-    } finally {
-      setSaveLoading(false);
-    }
+  const handleLoadTemplate = (template: Template) => {
+    setModal({
+      title: "Load Template",
+      message: `Load template "${template.name}"? This will replace your current work.`,
+      type: "confirm",
+      onConfirm: async () => {
+        try {
+          const pages = JSON.parse(template.pages);
+          onLoadTemplate(pages);
+          setModal(null);
+          showToast(
+            `Template "${template.name}" loaded successfully!`,
+            "success"
+          );
+        } catch (error) {
+          showToast(
+            "Failed to parse template data. The template file may be corrupted.",
+            "error"
+          );
+          setModal(null);
+        }
+      },
+      onCancel: () => setModal(null),
+    });
   };
 
-  const handleLoadTemplate = async (template: Template) => {
-    if (
-      confirm(
-        `Load template "${template.name}"? This will replace your current work.`
-      )
-    ) {
-      try {
-        const pages = JSON.parse(template.pages);
-        onLoadTemplate(pages);
-        alert(`Template "${template.name}" loaded successfully!`);
-      } catch (error) {
-        alert(
-          "Failed to parse template data. The template file may be corrupted."
-        );
-      }
-    }
-  };
 
-  const handleDeleteTemplate = async (template: Template) => {
-    if (
-      confirm(`Are you sure you want to delete template "${template.name}"?`)
-    ) {
-      try {
-        await deleteTemplateFromServer(template.id);
-        await loadTemplates(); // Refresh the list
-        alert(`Template "${template.name}" deleted successfully!`);
-      } catch (error) {
-        alert(
-          `Failed to delete template: ${
-            error instanceof Error ? error.message : "Unknown error"
-          }`
-        );
-      }
-    }
+  const handleDeleteTemplate = (template: Template) => {
+    setModal({
+      title: "Delete Template",
+      message: `Are you sure you want to delete template "${template.name}"?`,
+      type: "confirm",
+      onConfirm: async () => {
+        try {
+          await deleteTemplateFromServer(template.id);
+          await loadTemplates();
+          setModal(null);
+          showToast(
+            `Template "${template.name}" deleted successfully!`,
+            "success"
+          );
+        } catch (error) {
+          showToast(
+            `Failed to delete template: ${error instanceof Error ? error.message : "Unknown error"
+            }`,
+            "error"
+          );
+          setModal(null);
+        }
+      },
+      onCancel: () => setModal(null),
+    });
   };
 
   const renderServerTab = () => (
@@ -128,13 +195,12 @@ const RightPanel: React.FC<RightPanelProps> = ({
 
       {/* Server Status */}
       <div
-        className={`p-3 rounded-md ${
-          serverStatus === "online"
-            ? "bg-green-50 border border-green-200"
-            : serverStatus === "offline"
+        className={`p-3 rounded-md ${serverStatus === "online"
+          ? "bg-green-50 border border-green-200"
+          : serverStatus === "offline"
             ? "bg-red-50 border border-red-200"
             : "bg-yellow-50 border border-yellow-200"
-        }`}
+          }`}
       >
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium">
@@ -144,15 +210,15 @@ const RightPanel: React.FC<RightPanelProps> = ({
                 serverStatus === "online"
                   ? "text-green-600"
                   : serverStatus === "offline"
-                  ? "text-red-600"
-                  : "text-yellow-600"
+                    ? "text-red-600"
+                    : "text-yellow-600"
               }
             >
               {serverStatus === "online"
                 ? " Online"
                 : serverStatus === "offline"
-                ? " Offline"
-                : " Checking..."}
+                  ? " Offline"
+                  : " Checking..."}
             </span>
           </span>
           <button
@@ -224,13 +290,13 @@ const RightPanel: React.FC<RightPanelProps> = ({
                 <div className="flex space-x-2">
                   <button
                     onClick={() => handleLoadTemplate(template)}
-                    className="flex-1 bg-green-600 text-white py-1 px-2 rounded text-xs hover:bg-green-700"
+                    className="flex-1 bg-green-600 text-white py-1 px-2 rounded text-xs cursor-pointer"
                   >
                     Load
                   </button>
                   <button
                     onClick={() => handleDeleteTemplate(template)}
-                    className="flex-1 bg-red-600 text-white py-1 px-2 rounded text-xs hover:bg-red-700"
+                    className="flex-1 bg-red-600 text-white py-1 px-2 rounded text-xs cursor-pointer"
                   >
                     Delete
                   </button>
@@ -242,7 +308,6 @@ const RightPanel: React.FC<RightPanelProps> = ({
       </div>
 
       {/* Server Instructions */}
-   
     </div>
   );
 
@@ -258,7 +323,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
   ];
 
   const layouts = [
-     {
+    {
       id: "layout0",
       name: "One Columns",
       layout: JSON.stringify({ cells: [["A"]] }),
@@ -306,9 +371,8 @@ const RightPanel: React.FC<RightPanelProps> = ({
         {layouts.map((layout) => (
           <button
             key={layout.id}
-            className={`layout-btn-grid ${
-              currentPage.layout === layout.layout ? "active" : ""
-            }`}
+            className={`layout-btn-grid ${currentPage.layout === layout.layout ? "active" : ""
+              }`}
             onClick={() => onLayoutChange(layout.layout)}
           >
             <svg viewBox="0 0 100 60" className="w-full h-12">
@@ -377,11 +441,10 @@ const RightPanel: React.FC<RightPanelProps> = ({
       {currentPage.elements.map((element) => (
         <div
           key={element.id}
-          className={`p-2 border rounded cursor-pointer ${
-            activeElement?.id === element.id
-              ? "bg-blue-100 border-blue-500"
-              : "border-gray-200"
-          }`}
+          className={`p-2 border rounded cursor-pointer ${activeElement?.id === element.id
+            ? "bg-blue-100 border-blue-500"
+            : "border-gray-200"
+            }`}
           onClick={() => onTabChange("settings")}
         >
           <div className="flex justify-between items-center">
@@ -845,11 +908,10 @@ const RightPanel: React.FC<RightPanelProps> = ({
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              className={`flex-1 py-3 text-sm font-medium transition-colors ${
-                activeTab === tab.id
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
+              className={`flex-1 py-3 text-sm font-medium transition-colors ${activeTab === tab.id
+                ? "text-blue-600 border-b-2 border-blue-600"
+                : "text-gray-500 hover:text-gray-700"
+                }`}
               onClick={() => onTabChange(tab.id)}
             >
               {tab.label}
@@ -867,6 +929,31 @@ const RightPanel: React.FC<RightPanelProps> = ({
         {activeTab === "settings" && renderSettingsTab()}
         {activeTab === "server" && renderServerTab()}
       </div>
+      {modal && (
+        <Modal
+          title={modal.title}
+          message={modal.message}
+          type={modal.type}
+          onConfirm={modal.onConfirm}
+          onCancel={() => setModal(null)}
+        />
+      )}
+
+      <Snackbar
+        open={toastOpen}
+        autoHideDuration={3000}
+        onClose={handleToastClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleToastClose}
+          severity={toastSeverity}
+          sx={{ width: "100%" }}
+          variant="filled"
+        >
+          {toastMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

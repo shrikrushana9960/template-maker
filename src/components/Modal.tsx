@@ -28,8 +28,8 @@ const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black opacity-90 flex items-center justify-center z-50">
-      <div className="bg-white p-8 rounded-lg text-center max-w-md w-full">
+    <div className="fixed inset-0 bg-[rgba(0,0,0,0.8)] flex items-center justify-center z-50">
+      <div className="bg-white p-8 rounded-lg text-center max-w-md w-full z-200">
         <h3 className="font-semibold text-lg mb-4">{title}</h3>
         {message && <p className="text-sm text-gray-700 mb-4">{message}</p>}
 

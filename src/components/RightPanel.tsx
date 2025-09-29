@@ -8,8 +8,8 @@ import {
   type Template,
 } from "../utils/serverApi";
 import Modal from "./Modal";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
 
 interface RightPanelProps {
   activeTab: string;
@@ -54,28 +54,6 @@ const RightPanel: React.FC<RightPanelProps> = ({
   const [saveLoading, setSaveLoading] = useState(false);
   const [modal, setModal] = useState<ModalConfig | null>(null);
 
-  // ✅ Snackbar toast state
-  const [toastOpen, setToastOpen] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastSeverity, setToastSeverity] =
-    useState<"success" | "error" | "info" | "warning">("info");
-
-  const showToast = (
-    message: string,
-    severity: "success" | "error" | "info" | "warning" = "info"
-  ) => {
-    setToastMessage(message);
-    setToastSeverity(severity);
-    setToastOpen(true);
-  };
-
-  const handleToastClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") return;
-    setToastOpen(false);
-  };
 
   useEffect(() => {
     if (activeTab === "server") {
@@ -98,7 +76,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
     } catch (error) {
       console.error("Failed to load templates:", error);
       setTemplates([]);
-      showToast("Failed to load templates", "error");
+      toastr.error(`Failed to load templates`)
     } finally {
       setLoading(false);
     }
@@ -112,21 +90,17 @@ const RightPanel: React.FC<RightPanelProps> = ({
       placeholder: "Template name",
       onConfirm: async (templateName) => {
         if (!templateName) return;
-  
+
         setSaveLoading(true);
         try {
           await saveTemplateToServer(templateName, currentPages);
           await loadTemplates();
           setModal(null);
-          showToast(`Template "${templateName}" saved successfully!`, "success");
+          toastr.success(`Template "${templateName}" saved successfully!`)
         } catch (error) {
           setModal(null);
-          showToast(
-            `Failed to save template: ${
-              error instanceof Error ? error.message : "Unknown error"
-            }`,
-            "error"
-          );
+          toastr.error(`Failed to save template: ${error instanceof Error ? error.message : "Unknown error"
+            }`)
         } finally {
           setSaveLoading(false);
         }
@@ -134,7 +108,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
       onCancel: () => setModal(null),
     });
   };
-  
+
 
   const handleLoadTemplate = (template: Template) => {
     setModal({
@@ -146,15 +120,9 @@ const RightPanel: React.FC<RightPanelProps> = ({
           const pages = JSON.parse(template.pages);
           onLoadTemplate(pages);
           setModal(null);
-          showToast(
-            `Template "${template.name}" loaded successfully!`,
-            "success"
-          );
+          toastr.success(`Template "${template.name}" loaded successfully!`)
         } catch (error) {
-          showToast(
-            "Failed to parse template data. The template file may be corrupted.",
-            "error"
-          );
+          toastr.error("Failed to parse template data. The template file may be corrupted.")
           setModal(null);
         }
       },
@@ -173,16 +141,10 @@ const RightPanel: React.FC<RightPanelProps> = ({
           await deleteTemplateFromServer(template.id);
           await loadTemplates();
           setModal(null);
-          showToast(
-            `Template "${template.name}" deleted successfully!`,
-            "success"
-          );
+          toastr.success(`Template "${template.name}" deleted successfully!`)
         } catch (error) {
-          showToast(
-            `Failed to delete template: ${error instanceof Error ? error.message : "Unknown error"
-            }`,
-            "error"
-          );
+          toastr.error(`Failed to delete template: ${error instanceof Error ? error.message : "Unknown error"
+            }`)
           setModal(null);
         }
       },
@@ -376,9 +338,19 @@ const RightPanel: React.FC<RightPanelProps> = ({
               }`}
             onClick={() => onLayoutChange(layout.layout)}
           >
-            <svg viewBox="0 0 100 60" className="w-full h-12">
+            {/* <svg viewBox="0 0 100 60" className="w-full h-12">
               {layout.layout.includes("A") && (
-                <rect x="5" y="5" width="40" height="50" className="svg-cell" />
+                <>
+                  <rect x="5" y="5" width="40" height="50" className="svg-cell" />
+                  <line
+                    x1={5 + 40 / 2}
+                    y1={5}
+                    x2={5 + 40 / 2}
+                    y2={5 + 50}
+                    stroke="black"
+                    strokeWidth="1"
+                  />
+                </>
               )}
               {layout.layout.includes("B") && (
                 <rect
@@ -407,6 +379,81 @@ const RightPanel: React.FC<RightPanelProps> = ({
                   className="svg-cell"
                 />
               )}
+            </svg> */}
+            <svg viewBox="0 0 100 60" className="w-full h-12">
+              {(() => {
+                const parsed = JSON.parse(layout.layout);   // { cells: [...] }
+                const rows = parsed.cells.length;
+                const rowHeight = 50 / rows;
+
+                return parsed.cells.flatMap((row: string[], rowIndex: number) => {
+                  const cols = row.length;
+                  const cellWidth = 90 / cols;
+
+                  return row.map((cell: string, colIndex: number) => {
+                    const x = 5 + colIndex * cellWidth;
+                    const y = 5 + rowIndex * rowHeight;
+
+                    return (
+                      <rect
+                        key={`${rowIndex}-${colIndex}`}
+                        x={x}
+                        y={y}
+                        width={cellWidth}
+                        height={rowHeight}
+                        className="svg-cell"
+                        stroke="black"
+                        fill="none"
+                      />
+                    );
+                  });
+                });
+              })()}
+
+              {/* Divider lines */}
+              {(() => {
+                const parsed = JSON.parse(layout.layout);
+                const rows = parsed.cells.length;
+                const rowHeight = 50 / rows;
+                const cols = Math.max(...parsed.cells.map((r: string[]) => r.length));
+                const cellWidth = 90 / cols;
+
+                const lines: JSX.Element[] = [];
+
+                // Vertical dividers
+                for (let i = 1; i < cols; i++) {
+                  const x = 5 + i * cellWidth;
+                  lines.push(
+                    <line
+                      key={`v-${i}`}
+                      x1={x}
+                      y1={5}
+                      x2={x}
+                      y2={5 + 50}
+                      stroke="black"
+                      strokeWidth="1"
+                    />
+                  );
+                }
+
+                // Horizontal dividers
+                for (let j = 1; j < rows; j++) {
+                  const y = 5 + j * rowHeight;
+                  lines.push(
+                    <line
+                      key={`h-${j}`}
+                      x1={5}
+                      y1={y}
+                      x2={5 + 90}
+                      y2={y}
+                      stroke="black"
+                      strokeWidth="1"
+                    />
+                  );
+                }
+
+                return lines;
+              })()}
             </svg>
           </button>
         ))}
@@ -939,22 +986,6 @@ const RightPanel: React.FC<RightPanelProps> = ({
           onCancel={() => setModal(null)}
         />
       )}
-
-      <Snackbar
-        open={toastOpen}
-        autoHideDuration={3000}
-        onClose={handleToastClose}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert
-          onClose={handleToastClose}
-          severity={toastSeverity}
-          sx={{ width: "100%" }}
-          variant="filled"
-        >
-          {toastMessage}
-        </Alert>
-      </Snackbar>
     </div>
   );
 };

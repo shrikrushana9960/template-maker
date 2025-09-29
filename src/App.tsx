@@ -3,7 +3,7 @@ import Toolbar from './components/Toolbar';
 import Editor from './components/Editor';
 import RightPanel from './components/RightPanel';
 import Modal from './components/Modal';
-import type{ ElementData, PageData } from './types';
+import type { ElementData, PageData } from './types';
 import { exportAsPdf } from './utils/exportUtils';
 
 const defaultPage: PageData = {
@@ -26,22 +26,22 @@ const App: React.FC = () => {
   const currentPage = pages[currentPageIndex];
 
   const updateCurrentPage = useCallback((updates: Partial<PageData>) => {
-    setPages(prev => prev.map((page, index) => 
+    setPages(prev => prev.map((page, index) =>
       index === currentPageIndex ? { ...page, ...updates } : page
     ));
   }, [currentPageIndex]);
 
-    const handleLoadTemplate = useCallback((pages: PageData[]) => {
+  const handleLoadTemplate = useCallback((pages: PageData[]) => {
     setPages(pages);
     setCurrentPageIndex(0);
     setActiveElement(null);
     setActiveContainer(null);
   }, []);
   const updateElement = useCallback((id: string, updates: Partial<ElementData>) => {
-    setPages(prev => prev.map((page, index) => 
+    setPages(prev => prev.map((page, index) =>
       index === currentPageIndex ? {
         ...page,
-        elements: page.elements.map(el => 
+        elements: page.elements.map(el =>
           el.id === id ? { ...el, ...updates } : el
         )
       } : page
@@ -49,7 +49,7 @@ const App: React.FC = () => {
   }, [currentPageIndex]);
 
   const deleteElement = useCallback((id: string) => {
-    setPages(prev => prev.map((page, index) => 
+    setPages(prev => prev.map((page, index) =>
       index === currentPageIndex ? {
         ...page,
         elements: page.elements.filter(el => el.id !== id)
@@ -60,25 +60,25 @@ const App: React.FC = () => {
 
   const addElement = useCallback((type: string, chartType?: string) => {
     const layoutData = JSON.parse(currentPage.layout);
-    console.log(layoutData,"layoutData");
-    
-    const uniqueCells  = [...new Set(layoutData.cells.flat())];
-    
+
+
+    const uniqueCells = [...new Set(layoutData.cells.flat())];
+
     // Use active container if set, otherwise use first available cell
     let containerId = activeContainer;
-    
+
     if (!containerId) {
       // If no active container, try to find a cell with fewer elements
       const cellElementCounts = uniqueCells.map(cell => ({
         cell,
         count: currentPage.elements.filter(el => el.containerId === cell).length
       }));
-      
+
       // Find the cell with the fewest elements
-      const leastUsedCell = cellElementCounts.reduce((prev, current) => 
+      const leastUsedCell = cellElementCounts.reduce((prev, current) =>
         prev.count < current.count ? prev : current
       ).cell;
-      
+
       containerId = leastUsedCell;
     }
 
@@ -134,7 +134,7 @@ const App: React.FC = () => {
       };
     }
 
-    setPages(prev => prev.map((page, index) => 
+    setPages(prev => prev.map((page, index) =>
       index === currentPageIndex ? {
         ...page,
         elements: [...page.elements, newElement]
@@ -161,15 +161,15 @@ const App: React.FC = () => {
 
   const handleSaveTemplate = () => {
     const dataStr = JSON.stringify(pages, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
     const exportFileDefaultName = 'template.json';
-    
+
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
     linkElement.click();
-    
+
     setModal({
       title: 'Success',
       message: 'Template saved successfully!',
@@ -205,33 +205,33 @@ const App: React.FC = () => {
     reader.readAsText(file);
   };
 
-const handleExportPdf = async () => {
-  try {
-    setModal({
-      title: 'Exporting PDF',
-      message: 'Generating PDF... This may take a moment.',
-      type: 'info',
-      onConfirm: () => setModal(null)
-    });
+  const handleExportPdf = async () => {
+    try {
+      setModal({
+        title: 'Exporting PDF',
+        message: 'Generating PDF... This may take a moment.',
+        type: 'info',
+        onConfirm: () => setModal(null)
+      });
 
-    await exportAsPdf(pages);
-    
-    setModal({
-      title: 'Success',
-      message: 'PDF exported successfully!',
-      type: 'info',
-      onConfirm: () => setModal(null)
-    });
-  } catch (error) {
-    console.error('PDF export error:', error);
-    setModal({
-      title: 'Export Error',
-      message: 'Failed to export PDF. The document may contain unsupported elements. Please try simplifying your template.',
-      type: 'info',
-      onConfirm: () => setModal(null)
-    });
-  }
-};
+      await exportAsPdf(pages);
+
+      setModal({
+        title: 'Success',
+        message: 'PDF exported successfully!',
+        type: 'info',
+        onConfirm: () => setModal(null)
+      });
+    } catch (error) {
+      console.error('PDF export error:', error);
+      setModal({
+        title: 'Export Error',
+        message: 'Failed to export PDF. The document may contain unsupported elements. Please try simplifying your template.',
+        type: 'info',
+        onConfirm: () => setModal(null)
+      });
+    }
+  };
 
   const handleAddPage = () => {
     setPages(prev => [...prev, { ...defaultPage }]);
@@ -250,7 +250,7 @@ const handleExportPdf = async () => {
       });
       return;
     }
-    
+
     setModal({
       title: 'Delete Page',
       message: 'Are you sure you want to delete this page? This action cannot be undone.',
@@ -268,10 +268,10 @@ const handleExportPdf = async () => {
   const handleAutofill = () => {
     const layoutData = JSON.parse(currentPage.layout);
     const uniqueCells = [...new Set(layoutData.cells.flat())];
-    
+
     const newElements: ElementData[] = [];
-    
-    uniqueCells.forEach((cell:any, index) => {
+
+    uniqueCells.forEach((cell: any, index) => {
       if (index === 0) {
         newElements.push({
           id: generateId(),
@@ -281,15 +281,15 @@ const handleExportPdf = async () => {
           width: 300,
           height: 40,
           containerId: cell,
-          data: { 
-            text: `Header for ${cell}`, 
-            fontSize: '24px', 
+          data: {
+            text: `Header for ${cell}`,
+            fontSize: '24px',
             isBold: true,
             color: '#000000'
           }
         });
       }
-      
+
       newElements.push({
         id: generateId(),
         type: 'text',
@@ -298,15 +298,15 @@ const handleExportPdf = async () => {
         width: 300,
         height: 80,
         containerId: cell,
-        data: { 
-          text: `This is content for cell ${cell}. You can add text, images, tables, or charts here.`, 
+        data: {
+          text: `This is content for cell ${cell}. You can add text, images, tables, or charts here.`,
           fontSize: '14px',
           color: '#000000'
         }
       });
     });
 
-    setPages(prev => prev.map((page, index) => 
+    setPages(prev => prev.map((page, index) =>
       index === currentPageIndex ? {
         ...page,
         elements: [...page.elements, ...newElements]
@@ -317,15 +317,15 @@ const handleExportPdf = async () => {
   const handleLayoutChange = (layout: string) => {
     const layoutData = JSON.parse(layout);
     const newCells = layoutData.cells.flat();
-    
+
     // Filter out elements that don't belong to the new layout cells
-    const filteredElements = currentPage.elements.filter(el => 
+    const filteredElements = currentPage.elements.filter(el =>
       newCells.includes(el.containerId)
     );
-    
-    updateCurrentPage({ 
+
+    updateCurrentPage({
       layout,
-      elements: filteredElements 
+      elements: filteredElements
     });
     setActiveContainer(null);
   };
@@ -371,7 +371,7 @@ const handleExportPdf = async () => {
           activeContainer={activeContainer}
         />
 
-       <RightPanel
+        <RightPanel
           activeTab={activeTab}
           onTabChange={setActiveTab}
           activeElement={activeElement}

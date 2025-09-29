@@ -55,11 +55,11 @@ const Toolbar: React.FC<ToolbarProps> = ({
     <div className="bg-white shadow-md z-20">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-6">
-          <div className='bg-black'>
+          <div className='bg-black w-[219px] h-[70px] overflow-hidden'>
             <img
               src="https://investset.com/wp-content/uploads/2021/10/cropped-logo_invest_set-219x70.png"
               alt="Invest Set Logo"
-              className="w-[219px] h-[70px] object-contain"
+              className="w-full h-full object-contain"
             />
           </div>
           {/* File Section */}

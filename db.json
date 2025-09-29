@@ -1,3 +1,11 @@
 {
-  "templates": []
+  "templates": [
+    {
+      "id": "hsdh",
+      "name": "hsdh",
+      "createdAt": "2025-09-29T07:03:18.758Z",
+      "updatedAt": "2025-09-29T07:03:18.759Z",
+      "pages": "[{\"elements\":[{\"id\":\"iet7j6520\",\"type\":\"header\",\"x\":10,\"y\":10,\"width\":200,\"height\":40,\"containerId\":\"B\",\"data\":{\"text\":\"Jayesh\",\"color\":\"#000000\",\"fontSize\":\"24px\",\"isBold\":true,\"isItalic\":false,\"headerSize\":\"h1\"}}],\"layout\":\"{\\\"cells\\\":[[\\\"A\\\",\\\"B\\\"]]}\",\"backgroundColor\":\"#ffffff\",\"gridColor\":\"#f8fafc\"}]"
+    }
+  ]
 }

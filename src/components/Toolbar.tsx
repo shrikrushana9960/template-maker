@@ -43,7 +43,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   };
 
   const elementButtons = [
-    { type: 'header', label: 'Header', icon: 'M4 12h16M12 4v16' },
+    // { type: 'header', label: 'Header', icon: 'M4 12h16M12 4v16' },
     { type: 'text', label: 'Text', icon: 'M4 12h16M16 8h-8M16 16h-8' },
     { type: 'image', label: 'Image', icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10' },
     { type: 'table', label: 'Table', icon: 'M12 2v20M2 7h20M2 17h20M7 2v20M17 2v20' },

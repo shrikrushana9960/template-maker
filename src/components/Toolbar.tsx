@@ -110,6 +110,28 @@ const Toolbar: React.FC<ToolbarProps> = ({
               </button>
 
               <button
+                onClick={onSaveTemplate}
+                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6 text-gray-500"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                <span className="text-xs text-gray-700 mt-1">Download template</span>
+              </button>
+
+
+              <button
                 onClick={onExportPdf}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
               >

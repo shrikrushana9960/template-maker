@@ -227,8 +227,9 @@ const Editor: React.FC<EditorProps> = ({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [activeElement, onElementDelete]);
 
-  const layoutData = JSON.parse(currentPage.layout);
-  const uniqueCells = [...new Set(layoutData.cells.flat())];
+  const layoutData = currentPage?.layout ? JSON.parse(currentPage.layout) : null;
+  const uniqueCells = layoutData?.cells ? [...new Set(layoutData?.cells.flat())] : [];
+
 
   return (
     <div 
@@ -244,8 +245,8 @@ const Editor: React.FC<EditorProps> = ({
           onClick={handlePageClick}
           style={{
             display: 'grid',
-            gridTemplateRows: layoutData.cells.map(() => '1fr').join(' '),
-            gridTemplateAreas: layoutData.cells.map(row => `"${row.map(cell => cell.toLowerCase()).join(' ')}"`).join(' '),
+            gridTemplateRows: layoutData?.cells?.map(() => '1fr').join(' '),
+            gridTemplateAreas: layoutData?.cells?.map(row => `"${row?.map(cell => cell?.toLowerCase()).join(' ')}"`).join(' '),
             gap: '0.5rem',
             backgroundColor: currentPage.backgroundColor,
             position: 'relative', // Important for absolute positioning of elements

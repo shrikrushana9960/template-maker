@@ -118,6 +118,8 @@ const RightPanel: React.FC<RightPanelProps> = ({
       onConfirm: async () => {
         try {
           const pages = JSON.parse(template.pages);
+          console.log(pages);
+          
           onLoadTemplate(pages);
           setModal(null);
           toastr.success(`Template "${template.name}" loaded successfully!`)

@@ -217,7 +217,7 @@ const Editor: React.FC<EditorProps> = ({
   // Add keyboard event listener for delete
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.key === 'Delete' || e.key === 'Backspace') && activeElement) {
+      if ((e.key === 'Delete' ) && activeElement) {
         e.preventDefault();
         onElementDelete(activeElement.id);
       }

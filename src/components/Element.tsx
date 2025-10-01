@@ -187,7 +187,7 @@ const Element: React.FC<ElementProps> = ({ element, onMouseDown, onUpdate }) => 
           <canvas
             ref={chartRef}
             className="w-full h-full"
-            onMouseDown={(e) => e.stopPropagation()}
+            // onMouseDown={(e) => e.stopPropagation()}
           />
         );
 

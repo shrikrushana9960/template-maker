@@ -1,6 +1,6 @@
-import React, { useRef, useEffect } from 'react';
-import Chart from 'chart.js/auto';
-import type { ElementData } from '../types';
+import React, { useRef, useEffect } from "react";
+import Chart from "chart.js/auto";
+import type { ElementData } from "../types";
 
 interface ElementProps {
   element: ElementData;
@@ -8,33 +8,38 @@ interface ElementProps {
   onUpdate: (id: string, updates: Partial<ElementData>) => void;
 }
 
-const Element: React.FC<ElementProps> = ({ element, onMouseDown, onUpdate }) => {
+const Element: React.FC<ElementProps> = ({
+  element,
+  onMouseDown,
+  onUpdate,
+}) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstanceRef = useRef<Chart | null>(null);
 
   useEffect(() => {
-    if (element.type === 'chart' && chartRef.current) {
+    if (element.type === "chart" && chartRef.current) {
       // Destroy previous instance to prevent duplicate canvas rendering
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
       }
 
       chartInstanceRef.current = new Chart(chartRef.current, {
-        type: element.data.chartType || 'bar',
+        type: element.data.chartType || "bar",
         data: {
-          labels: element.data.labels || ['A', 'B', 'C', 'D'],
+          labels: element.data.labels || ["A", "B", "C", "D"],
           datasets: [
             {
-              label: element.data.datasetLabel || 'Dataset',
-              data: element.data.values || [10, 20, 30, 40],
-              backgroundColor: element.data.backgroundColor || [
-                'rgba(75,192,192,0.6)',
-                'rgba(255,99,132,0.6)',
-                'rgba(255,206,86,0.6)',
-                'rgba(54,162,235,0.6)',
+              // FIX: Read data from the 'datasets' array with fallbacks
+              label: element.data.datasets?.[0]?.label || "Dataset",
+              data: element.data.datasets?.[0]?.data || [10, 20, 30, 40],
+              backgroundColor: element.data.datasets?.[0]?.backgroundColor || [
+                "rgba(75,192,192,0.6)",
+                "rgba(255,99,132,0.6)",
+                "rgba(255,206,86,0.6)",
+                "rgba(54,162,235,0.6)",
               ],
-              borderColor: element.data.borderColor || 'rgba(0,0,0,0.8)',
+              borderColor: "rgba(0,0,0,0.8)",
               borderWidth: 1,
             },
           ],
@@ -43,7 +48,7 @@ const Element: React.FC<ElementProps> = ({ element, onMouseDown, onUpdate }) => 
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { display: true, position: 'top' },
+            legend: { display: true, position: "top" },
           },
           scales: {
             y: { beginAtZero: true },
@@ -62,7 +67,11 @@ const Element: React.FC<ElementProps> = ({ element, onMouseDown, onUpdate }) => 
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+    if (
+      target.tagName === "INPUT" ||
+      target.tagName === "TEXTAREA" ||
+      target.isContentEditable
+    ) {
       return;
     }
     onMouseDown(e, element);
@@ -70,40 +79,46 @@ const Element: React.FC<ElementProps> = ({ element, onMouseDown, onUpdate }) => 
 
   const renderContent = () => {
     switch (element.type) {
-      case 'text':
+      case "text":
         return (
           <textarea
             className="w-full h-full text-sm resize-none bg-transparent outline-none p-1"
-            value={element.data.text || 'Placeholder Text'}
+            value={element.data.text || "Placeholder Text"}
             onChange={(e) =>
-              onUpdate(element.id, { data: { ...element.data, text: e.target.value } })
+              onUpdate(element.id, {
+                data: { ...element.data, text: e.target.value },
+              })
             }
             style={{
               color: element.data.color,
               fontSize: element.data.fontSize,
-              fontWeight: element.data.isBold ? 'bold' : 'normal',
-              fontStyle: element.data.isItalic ? 'italic' : 'normal',
+              fontWeight: element.data.isBold ? "bold" : "normal",
+              fontStyle: element.data.isItalic ? "italic" : "normal",
             }}
             onMouseDown={(e) => e.stopPropagation()}
           />
         );
 
-      case 'header':
-        const Tag = (element.data.headerSize as keyof JSX.IntrinsicElements) || 'h1';
+      case "header":
+        const Tag =
+          (element.data.headerSize as keyof JSX.IntrinsicElements) || "h1";
         return (
           <Tag
             className="w-full h-full resize-none bg-transparent outline-none p-1"
             contentEditable
             onInput={(e) =>
               onUpdate(element.id, {
-                data: { ...element.data, text: e.currentTarget.textContent || '' },
+                data: {
+                  ...element.data,
+                  text: e.currentTarget.textContent || "",
+                },
               })
             }
             style={{
               color: element.data.color,
               fontSize: element.data.fontSize,
-              fontWeight: element.data.isBold ? 'bold' : 'normal',
-              fontStyle: element.data.isItalic ? 'italic' : 'normal',
+              fontWeight: element.data.isBold ? "bold" : "normal",
+              fontStyle: element.data.isItalic ? "italic" : "normal",
             }}
             onMouseDown={(e) => {
               if (e.target === e.currentTarget) {
@@ -112,11 +127,11 @@ const Element: React.FC<ElementProps> = ({ element, onMouseDown, onUpdate }) => 
             }}
             suppressContentEditableWarning={true}
           >
-            {element.data.text || 'Placeholder Header'}
+            {element.data.text || "Placeholder Header"}
           </Tag>
         );
 
-      case 'image':
+      case "image":
         if (element.data.src) {
           return (
             <img
@@ -139,7 +154,12 @@ const Element: React.FC<ElementProps> = ({ element, onMouseDown, onUpdate }) => 
                 if (file) {
                   const reader = new FileReader();
                   reader.onload = (event) => {
-                    onUpdate(element.id, { data: { ...element.data, src: event.target?.result as string } });
+                    onUpdate(element.id, {
+                      data: {
+                        ...element.data,
+                        src: event.target?.result as string,
+                      },
+                    });
                   };
                   reader.readAsDataURL(file);
                 }
@@ -149,10 +169,10 @@ const Element: React.FC<ElementProps> = ({ element, onMouseDown, onUpdate }) => 
           </label>
         );
 
-      case 'table':
+      case "table":
         const tableData = element.data.table || [
-          ['Header 1', 'Header 2', 'Header 3'],
-          ['Data 1', 'Data 2', 'Data 3'],
+          ["Header 1", "Header 2", "Header 3"],
+          ["Data 1", "Data 2", "Data 3"],
         ];
         return (
           <div className="p-1 overflow-auto w-full h-full">
@@ -161,7 +181,10 @@ const Element: React.FC<ElementProps> = ({ element, onMouseDown, onUpdate }) => 
                 {tableData.map((row, rowIndex) => (
                   <tr key={rowIndex}>
                     {row.map((cell, colIndex) => (
-                      <td key={colIndex} className="border border-gray-300 p-0.5">
+                      <td
+                        key={colIndex}
+                        className="border border-gray-300 p-0.5"
+                      >
                         <input
                           type="text"
                           value={cell}
@@ -169,7 +192,9 @@ const Element: React.FC<ElementProps> = ({ element, onMouseDown, onUpdate }) => 
                           onChange={(e) => {
                             const newTableData = [...tableData];
                             newTableData[rowIndex][colIndex] = e.target.value;
-                            onUpdate(element.id, { data: { ...element.data, table: newTableData } });
+                            onUpdate(element.id, {
+                              data: { ...element.data, table: newTableData },
+                            });
                           }}
                           onMouseDown={(e) => e.stopPropagation()}
                         />
@@ -182,12 +207,12 @@ const Element: React.FC<ElementProps> = ({ element, onMouseDown, onUpdate }) => 
           </div>
         );
 
-      case 'chart':
+      case "chart":
         return (
           <canvas
             ref={chartRef}
             className="w-full h-full"
-            onMouseDown={(e) => e.stopPropagation()}
+            // onMouseDown={(e) => e.stopPropagation()}
           />
         );
 
@@ -197,8 +222,14 @@ const Element: React.FC<ElementProps> = ({ element, onMouseDown, onUpdate }) => 
   };
 
   const resizeHandles = [
-    'top-left', 'top-right', 'bottom-left', 'bottom-right',
-    'top-center', 'bottom-center', 'left-center', 'right-center'
+    "top-left",
+    "top-right",
+    "bottom-left",
+    "bottom-right",
+    "top-center",
+    "bottom-center",
+    "left-center",
+    "right-center",
   ];
 
   return (

@@ -47,13 +47,13 @@ const RightPanel: React.FC<RightPanelProps> = ({
 }) => {
   const [localElement, setLocalElement] = useState(activeElement);
   const [templates, setTemplates] = useState<Template[]>([]);
+  const [datasetValuesStr, setDatasetValuesStr] = useState('');
   const [serverStatus, setServerStatus] = useState<
     "checking" | "online" | "offline"
   >("checking");
   const [loading, setLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [modal, setModal] = useState<ModalConfig | null>(null);
-
 
   useEffect(() => {
     if (activeTab === "server") {
@@ -76,7 +76,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
     } catch (error) {
       console.error("Failed to load templates:", error);
       setTemplates([]);
-      toastr.error(`Failed to load templates`)
+      toastr.error(`Failed to load templates`);
     } finally {
       setLoading(false);
     }
@@ -96,11 +96,14 @@ const RightPanel: React.FC<RightPanelProps> = ({
           await saveTemplateToServer(templateName, currentPages);
           await loadTemplates();
           setModal(null);
-          toastr.success(`Template "${templateName}" saved successfully!`)
+          toastr.success(`Template "${templateName}" saved successfully!`);
         } catch (error) {
           setModal(null);
-          toastr.error(`Failed to save template: ${error instanceof Error ? error.message : "Unknown error"
-            }`)
+          toastr.error(
+            `Failed to save template: ${
+              error instanceof Error ? error.message : "Unknown error"
+            }`
+          );
         } finally {
           setSaveLoading(false);
         }
@@ -108,7 +111,6 @@ const RightPanel: React.FC<RightPanelProps> = ({
       onCancel: () => setModal(null),
     });
   };
-
 
   const handleLoadTemplate = (template: Template) => {
     setModal({
@@ -122,16 +124,17 @@ const RightPanel: React.FC<RightPanelProps> = ({
           
           onLoadTemplate(pages);
           setModal(null);
-          toastr.success(`Template "${template.name}" loaded successfully!`)
+          toastr.success(`Template "${template.name}" loaded successfully!`);
         } catch (error) {
-          toastr.error("Failed to parse template data. The template file may be corrupted.")
+          toastr.error(
+            "Failed to parse template data. The template file may be corrupted."
+          );
           setModal(null);
         }
       },
       onCancel: () => setModal(null),
     });
   };
-
 
   const handleDeleteTemplate = (template: Template) => {
     setModal({
@@ -143,10 +146,13 @@ const RightPanel: React.FC<RightPanelProps> = ({
           await deleteTemplateFromServer(template.id);
           await loadTemplates();
           setModal(null);
-          toastr.success(`Template "${template.name}" deleted successfully!`)
+          toastr.success(`Template "${template.name}" deleted successfully!`);
         } catch (error) {
-          toastr.error(`Failed to delete template: ${error instanceof Error ? error.message : "Unknown error"
-            }`)
+          toastr.error(
+            `Failed to delete template: ${
+              error instanceof Error ? error.message : "Unknown error"
+            }`
+          );
           setModal(null);
         }
       },
@@ -160,12 +166,13 @@ const RightPanel: React.FC<RightPanelProps> = ({
 
       {/* Server Status */}
       <div
-        className={`p-3 rounded-md ${serverStatus === "online"
-          ? "bg-green-50 border border-green-200"
-          : serverStatus === "offline"
+        className={`p-3 rounded-md ${
+          serverStatus === "online"
+            ? "bg-green-50 border border-green-200"
+            : serverStatus === "offline"
             ? "bg-red-50 border border-red-200"
             : "bg-yellow-50 border border-yellow-200"
-          }`}
+        }`}
       >
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium">
@@ -175,15 +182,15 @@ const RightPanel: React.FC<RightPanelProps> = ({
                 serverStatus === "online"
                   ? "text-green-600"
                   : serverStatus === "offline"
-                    ? "text-red-600"
-                    : "text-yellow-600"
+                  ? "text-red-600"
+                  : "text-yellow-600"
               }
             >
               {serverStatus === "online"
                 ? " Online"
                 : serverStatus === "offline"
-                  ? " Offline"
-                  : " Checking..."}
+                ? " Offline"
+                : " Checking..."}
             </span>
           </span>
           <button
@@ -276,6 +283,13 @@ const RightPanel: React.FC<RightPanelProps> = ({
     </div>
   );
 
+  useEffect(() => {
+  setLocalElement(activeElement);
+  if (activeElement?.type === 'chart') {
+    // When the element changes, initialize our new string state
+    setDatasetValuesStr((activeElement.data.datasets?.[0]?.data || []).join(', '));
+  }
+}, [activeElement]);
   React.useEffect(() => {
     setLocalElement(activeElement);
   }, [activeElement]);
@@ -336,8 +350,9 @@ const RightPanel: React.FC<RightPanelProps> = ({
         {layouts.map((layout) => (
           <button
             key={layout.id}
-            className={`layout-btn-grid ${currentPage.layout === layout.layout ? "active" : ""
-              }`}
+            className={`layout-btn-grid ${
+              currentPage.layout === layout.layout ? "active" : ""
+            }`}
             onClick={() => onLayoutChange(layout.layout)}
           >
             {/* <svg viewBox="0 0 100 60" className="w-full h-12">
@@ -384,32 +399,34 @@ const RightPanel: React.FC<RightPanelProps> = ({
             </svg> */}
             <svg viewBox="0 0 100 60" className="w-full h-12">
               {(() => {
-                const parsed = JSON.parse(layout.layout);   // { cells: [...] }
+                const parsed = JSON.parse(layout.layout); // { cells: [...] }
                 const rows = parsed.cells.length;
                 const rowHeight = 50 / rows;
 
-                return parsed.cells.flatMap((row: string[], rowIndex: number) => {
-                  const cols = row.length;
-                  const cellWidth = 90 / cols;
+                return parsed.cells.flatMap(
+                  (row: string[], rowIndex: number) => {
+                    const cols = row.length;
+                    const cellWidth = 90 / cols;
 
-                  return row.map((cell: string, colIndex: number) => {
-                    const x = 5 + colIndex * cellWidth;
-                    const y = 5 + rowIndex * rowHeight;
+                    return row.map((cell: string, colIndex: number) => {
+                      const x = 5 + colIndex * cellWidth;
+                      const y = 5 + rowIndex * rowHeight;
 
-                    return (
-                      <rect
-                        key={`${rowIndex}-${colIndex}`}
-                        x={x}
-                        y={y}
-                        width={cellWidth}
-                        height={rowHeight}
-                        className="svg-cell"
-                        stroke="black"
-                        fill="none"
-                      />
-                    );
-                  });
-                });
+                      return (
+                        <rect
+                          key={`${rowIndex}-${colIndex}`}
+                          x={x}
+                          y={y}
+                          width={cellWidth}
+                          height={rowHeight}
+                          className="svg-cell"
+                          stroke="black"
+                          fill="none"
+                        />
+                      );
+                    });
+                  }
+                );
               })()}
 
               {/* Divider lines */}
@@ -417,10 +434,12 @@ const RightPanel: React.FC<RightPanelProps> = ({
                 const parsed = JSON.parse(layout.layout);
                 const rows = parsed.cells.length;
                 const rowHeight = 50 / rows;
-                const cols = Math.max(...parsed.cells.map((r: string[]) => r.length));
+                const cols = Math.max(
+                  ...parsed.cells.map((r: string[]) => r.length)
+                );
                 const cellWidth = 90 / cols;
 
-                const lines: JSX.Element[] = [];
+                const lines: any[] = [];
 
                 // Vertical dividers
                 for (let i = 1; i < cols; i++) {
@@ -491,10 +510,11 @@ const RightPanel: React.FC<RightPanelProps> = ({
       {currentPage.elements.map((element) => (
         <div
           key={element.id}
-          className={`p-2 border rounded cursor-pointer ${activeElement?.id === element.id
-            ? "bg-blue-100 border-blue-500"
-            : "border-gray-200"
-            }`}
+          className={`p-2 border rounded cursor-pointer ${
+            activeElement?.id === element.id
+              ? "bg-blue-100 border-blue-500"
+              : "border-gray-200"
+          }`}
           onClick={() => onTabChange("settings")}
         >
           <div className="flex justify-between items-center">
@@ -834,12 +854,16 @@ const RightPanel: React.FC<RightPanelProps> = ({
               </label>
               <input
                 type="text"
-                value={(localElement.data.datasets?.[0]?.data || []).join(", ")}
+                value={datasetValuesStr}
                 onChange={(e) => {
+                  // FIX: Convert the string values to numbers
+                  const newText = e.target.value;
+                  setDatasetValuesStr(newText);
                   const values = e.target.value
                     .split(",")
-                    .map((s) => parseFloat(s.trim()))
-                    .filter((n) => !isNaN(n));
+                    .map((s) => parseFloat(s.trim())) // Convert each part to a number
+                    .filter((n) => !isNaN(n)); // Remove any that aren't valid numbers
+
                   handleElementUpdate({
                     data: {
                       ...localElement.data,
@@ -856,7 +880,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
               />
             </div>
 
-            <div>
+            {/* <div>
               <label className="text-sm font-medium text-gray-700">
                 Dataset Label
               </label>
@@ -878,17 +902,16 @@ const RightPanel: React.FC<RightPanelProps> = ({
                 }
                 className="w-full p-1 border border-gray-300 rounded text-sm"
               />
-            </div>
+            </div> */}
 
-            <div>
+            {/* <div>
               <label className="text-sm font-medium text-gray-700">
                 Background Color
               </label>
               <input
                 type="color"
                 value={
-                  (localElement.data.datasets?.[0]
-                    ?.backgroundColor) || "#36A2EB"
+                  localElement.data.datasets?.[0]?.backgroundColor || "#36A2EB"
                 }
                 onChange={(e) =>
                   handleElementUpdate({
@@ -905,7 +928,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
                 }
                 className="w-full h-8 rounded border border-gray-300"
               />
-            </div>
+            </div> */}
           </div>
         )}
 
@@ -958,10 +981,11 @@ const RightPanel: React.FC<RightPanelProps> = ({
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              className={`flex-1 py-3 text-sm font-medium transition-colors ${activeTab === tab.id
-                ? "text-blue-600 border-b-2 border-blue-600"
-                : "text-gray-500 hover:text-gray-700"
-                }`}
+              className={`flex-1 py-3 text-sm font-medium transition-colors ${
+                activeTab === tab.id
+                  ? "text-blue-600 border-b-2 border-blue-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
               onClick={() => onTabChange(tab.id)}
             >
               {tab.label}

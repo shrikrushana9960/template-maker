@@ -133,11 +133,11 @@ export const renderPageForExport = async (
 
 
             new Chart(canvas, {
-                type: chartType as any, // Cast as any since Chart.js types are complex
-                data: chartData, // Use the constructed data object
+                type: chartType as any, 
+                data: chartData, 
                 options: {
                     maintainAspectRatio: false,
-                    responsive: false, // Must be false when setting fixed width/height
+                    responsive: false, 
                     plugins: { legend: { display: true } },
                     scales: {
                         x: { grid: { display: false } },

@@ -1,7 +1,7 @@
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import type { PageData } from "../types";
-
+import { Chart } from "chart.js/auto";
 /** Convert named/modern color strings to safe hex/rgb/rgba */
 const safeColor = (color: string): string => {
   if (!color) return "#000000";
@@ -28,226 +28,252 @@ const safeColor = (color: string): string => {
 /**
  * Render a single page to a PNG data URL.
  */
-export const renderPageForExport = async (pageData: PageData): Promise<string> => {
-  const tempDiv = document.createElement("div");
-  Object.assign(tempDiv.style, {
-    width: "794px",
-    height: "1123px",
-    position: "absolute",
-    left: "-9999px",
-    background: safeColor(pageData.backgroundColor),
-    padding: "16px",
-    boxSizing: "border-box",
-  });
-
-  const layoutData = JSON.parse(pageData.layout);
-  Object.assign(tempDiv.style, {
-    display: "grid",
-    gridTemplateRows: layoutData.cells.map(() => "1fr").join(" "),
-    gridTemplateAreas: layoutData.cells
-      .map((row: string[]) => `"${row.map((cell: string) => cell.toLowerCase()).join(" ")}"`)
-      .join(" "),
-    gap: "0.5rem",
-  });
-
-  // Create grid cells
-  const uniqueCells = [...new Set(layoutData.cells.flat())];
-  const cellDivs: Record<string, HTMLDivElement> = {};
-
-  uniqueCells.forEach((cell: string) => {
-    const cellDiv = document.createElement("div");
-    Object.assign(cellDiv.style, {
-      gridArea: cell.toLowerCase(),
-      backgroundColor: safeColor(pageData.gridColor),
-      border: "none",
-      boxShadow: "none",
-      minHeight: "200px",
-      position: "relative",
-    });
-    cellDiv.id = `export-${cell}`;
-    tempDiv.appendChild(cellDiv);
-    cellDivs[cell] = cellDiv;
-  });
-
-  // Elements
-  const elementsToRender = pageData.elements.map((el) => ({
-    ...el,
-    container: cellDivs[el.containerId],
-  }));
-
-  elementsToRender.forEach((el) => {
-    const elDiv = document.createElement("div");
-    Object.assign(elDiv.style, {
-      position: "absolute",
-      left: `${el.x}px`,
-      top: `${el.y}px`,
-      width: `${el.width}px`,
-      height: `${el.height}px`,
-      borderRadius: "6px",
-      backgroundColor: "white",
-      boxSizing: "border-box",
-      padding: "8px",
-      border: "1px solid #e5e7eb",
+export const renderPageForExport = async (
+    pageData: PageData
+): Promise<string> => {
+    // 1. Setup temporary A4-sized container
+    const tempDiv = document.createElement("div");
+    Object.assign(tempDiv.style, {
+        width: "794px", // A4 at 72dpi
+        height: "1123px", // A4 at 72dpi
+        position: "absolute",
+        left: "-9999px",
+        background: safeColor(pageData.backgroundColor),
+        padding: "16px",
+        boxSizing: "border-box",
     });
 
-    // Handle different element types
-    if (el.type === "chart") {
-      const canvas = document.createElement("canvas");
-      canvas.width = el.width;
-      canvas.height = el.height;
-      elDiv.style.padding = "4px";
-      elDiv.appendChild(canvas);
+    // 2. Setup CSS Grid layout
+    const layoutData = JSON.parse(pageData.layout);
+    Object.assign(tempDiv.style, {
+        display: "grid",
+        // Map each row to '1fr' to distribute height evenly
+        gridTemplateRows: layoutData.cells.map(() => "1fr").join(" "),
+        // Map cell IDs to grid-area names
+        gridTemplateAreas: layoutData.cells
+            .map(
+                (row: string[]) =>
+                    `"${row.map((cell: string) => cell.toLowerCase()).join(" ")}"`
+            )
+            .join(" "),
+        gap: "0.5rem",
+    });
 
-      const chartType = el.data?.chartType;
-      const chartData = el.data?.chartData;
+    // 3. Create grid cells and map them to IDs
+    const uniqueCells = [...new Set(layoutData.cells.flat())];
+    const cellDivs: Record<string, HTMLDivElement> = {};
 
-      if ((window)?.Chart) {
-        new (window).Chart(canvas, {
-          type: chartType,
-          data: chartData,
-          options: {
-            maintainAspectRatio: false,
-            plugins: { legend: { display: true } },
-            scales: {
-              x: { grid: { display: false } },
-              y: {
-                grid: {
-                  display: true,
-                  drawBorder: false,
-                  color: "#e5e7eb",
-                  borderDash: [5, 5],
-                },
-              },
-            },
-          },
+    uniqueCells.forEach((cell: string) => {
+        const cellDiv = document.createElement("div");
+        Object.assign(cellDiv.style, {
+            gridArea: cell.toLowerCase(),
+            backgroundColor: safeColor(pageData.gridColor),
+            border: "none",
+            boxShadow: "none",
+            minHeight: "200px",
+            position: "relative", // Crucial for positioning elements inside
         });
-      } else {
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.fillStyle = "#3b82f6";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.fillStyle = "white";
-          ctx.font = "16px Arial";
-          ctx.textAlign = "center";
-          ctx.fillText("Chart", canvas.width / 2, canvas.height / 2);
-        }
-      }
-    } else if (el.type === "text" || el.type === "header") {
-      const tag = el.type === "header" ? (el.data?.headerSize || "h1") : "p";
-      const textElement = document.createElement(tag);
-      Object.assign(textElement.style, {
-        fontSize: el.data?.fontSize || "14px",
-        fontWeight: el.data?.isBold ? "bold" : "normal",
-        fontStyle: el.data?.isItalic ? "italic" : "normal",
-        color: safeColor(el.data?.color || "#000000"),
-        margin: "0",
-        padding: "0",
-        lineHeight: "1.4",
-      });
-      textElement.textContent = el.data?.text || "";
-      elDiv.style.overflow = "hidden";
-      elDiv.style.wordBreak = "break-all";
-      elDiv.appendChild(textElement);
-    } else if (el.type === "table") {
-      elDiv.style.padding = "4px";
-      const tableData: string[][] =
-        el.data?.table || [
-          ["Header 1", "Header 2", "Header 3"],
-          ["Data 1", "Data 2", "Data 3"],
-        ];
+        cellDiv.id = `export-${cell}`;
+        tempDiv.appendChild(cellDiv);
+        cellDivs[cell] = cellDiv;
+    });
 
-      const tableContainer = document.createElement("div");
-      Object.assign(tableContainer.style, {
-        overflow: "auto",
-        width: "100%",
-        height: "100%",
-      });
+    // 4. Map elements to their container DOM nodes
+    const elementsToRender = pageData.elements.map((el) => ({
+        ...el,
+        container: cellDivs[el.containerId],
+    }));
 
-      const table = document.createElement("table");
-      Object.assign(table.style, {
-        width: "100%",
-        fontSize: "10px",
-        borderCollapse: "collapse",
-        border: "1px solid #e5e7eb",
-      });
+    // 5. Render elements into their grid cells
+    for (const el of elementsToRender) {
+        if (!el.container) continue;
 
-      const tableBody = document.createElement("tbody");
-      tableData.forEach((row) => {
-        const tr = document.createElement("tr");
-        row.forEach((cell) => {
-          const td = document.createElement("td");
-          Object.assign(td.style, {
+        const elDiv = document.createElement("div");
+        Object.assign(elDiv.style, {
+            position: "absolute",
+            left: `${el.x}px`,
+            top: `${el.y}px`,
+            width: `${el.width}px`,
+            height: `${el.height}px`,
+            borderRadius: "6px",
+            backgroundColor: "white",
+            boxSizing: "border-box",
+            padding: "8px",
             border: "1px solid #e5e7eb",
-            padding: "2px",
-            textAlign: "left",
-          });
-          td.textContent = cell;
-          tr.appendChild(td);
         });
-        tableBody.appendChild(tr);
-      });
 
-      table.appendChild(tableBody);
-      tableContainer.appendChild(table);
-      elDiv.appendChild(tableContainer);
-    } else if (el.type === "image") {
-      elDiv.style.padding = "0";
-      if (el.data?.src) {
-        const img = document.createElement("img");
-        Object.assign(img.style, {
-          width: "100%",
-          height: "100%",
-          objectFit: "contain",
-        });
-        img.src = el.data.src;
-        elDiv.appendChild(img);
-      } else {
-        const placeholder = document.createElement("div");
-        Object.assign(placeholder.style, {
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#9ca3af",
-          fontSize: "12px",
-          border: "2px dashed #d1d5db",
-        });
-        placeholder.textContent = "Placeholder Image";
-        elDiv.appendChild(placeholder);
-      }
+        // Handle different element types
+        if (el.type === "chart") {
+            const canvas = document.createElement("canvas");
+            // Set canvas dimensions to match the element div for Chart.js
+            canvas.width = el.width;
+            canvas.height = el.height;
+            elDiv.style.padding = "4px";
+            elDiv.appendChild(canvas);
+
+            const chartType = el.data?.chartType;
+            console.log({...el.data})
+            const chartData = {
+                labels: el.data?.labels || ["A", "B", "C", "D"],
+                datasets: [
+                    {
+                        label: el.data?.datasets?.[0]?.label || "Dataset",
+                        data: el.data?.datasets?.[0]?.data || [10, 20, 30, 40],
+                        backgroundColor: el.data?.datasets?.[0]?.backgroundColor || [
+                            "rgba(75,192,192,0.6)",
+                            "rgba(255,99,132,0.6)",
+                            "rgba(255,206,86,0.6)",
+                            "rgba(54,162,235,0.6)",
+                        ],
+                        borderColor: "rgba(0,0,0,0.8)",
+                        borderWidth: 1,
+                    },
+                ],
+            };
+
+
+            new Chart(canvas, {
+                type: chartType as any, // Cast as any since Chart.js types are complex
+                data: chartData, // Use the constructed data object
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: false, // Must be false when setting fixed width/height
+                    plugins: { legend: { display: true } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: {
+                            grid: {
+                                display: true,
+                                drawBorder: false,
+                                color: "#e5e7eb",
+                                borderDash: [5, 5],
+                            },
+                        },
+                    },
+                },
+            });
+        } else if (el.type === "text" || el.type === "header") {
+            const tag = el.type === "header" ? el.data?.headerSize || "h1" : "p";
+            const textElement = document.createElement(tag);
+            Object.assign(textElement.style, {
+                fontSize: el.data?.fontSize || "14px",
+                fontWeight: el.data?.isBold ? "bold" : "normal",
+                fontStyle: el.data?.isItalic ? "italic" : "normal",
+                color: safeColor(el.data?.color || "#000000"),
+                margin: "0",
+                padding: "0",
+                lineHeight: "1.4",
+            });
+            textElement.textContent = el.data?.text || "";
+            elDiv.style.overflow = "hidden";
+            elDiv.style.wordBreak = "break-all";
+            elDiv.appendChild(textElement);
+        } else if (el.type === "table") {
+            elDiv.style.padding = "4px";
+            const tableData: string[][] = el.data?.table || [
+                ["Header 1", "Header 2", "Header 3"],
+                ["Data 1", "Data 2", "Data 3"],
+            ];
+
+            const tableContainer = document.createElement("div");
+            Object.assign(tableContainer.style, {
+                overflow: "auto",
+                width: "100%",
+                height: "100%",
+            });
+
+            const table = document.createElement("table");
+            Object.assign(table.style, {
+                width: "100%",
+                fontSize: "10px",
+                borderCollapse: "collapse",
+                border: "1px solid #e5e7eb",
+            });
+
+            const tableBody = document.createElement("tbody");
+            tableData.forEach((row, rowIndex) => {
+                const tr = document.createElement("tr");
+                row.forEach((cell) => {
+                    const cellTag = rowIndex === 0 ? 'th' : 'td'; // Use th for header row
+                    const cellElement = document.createElement(cellTag);
+                    Object.assign(cellElement.style, {
+                        border: "1px solid #e5e7eb",
+                        padding: "4px",
+                        textAlign: "left",
+                        fontWeight: rowIndex === 0 ? 'bold' : 'normal',
+                        backgroundColor: rowIndex === 0 ? '#f3f4f6' : 'white'
+                    });
+                    cellElement.textContent = cell;
+                    tr.appendChild(cellElement);
+                });
+                tableBody.appendChild(tr);
+            });
+
+            table.appendChild(tableBody);
+            tableContainer.appendChild(table);
+            elDiv.appendChild(tableContainer);
+        } else if (el.type === "image") {
+            elDiv.style.padding = "0";
+            if (el.data?.src) {
+                const img = document.createElement("img");
+                Object.assign(img.style, {
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                });
+                img.src = el.data.src;
+                elDiv.appendChild(img);
+            } else {
+                const placeholder = document.createElement("div");
+                Object.assign(placeholder.style, {
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#9ca3af",
+                    fontSize: "12px",
+                    border: "2px dashed #d1d5db",
+                });
+                placeholder.textContent = "Placeholder Image";
+                elDiv.appendChild(placeholder);
+            }
+        }
+
+        el.container.appendChild(elDiv);
     }
 
-    el.container?.appendChild(elDiv);
-  });
+    document.body.appendChild(tempDiv);
 
-  document.body.appendChild(tempDiv);
-
-  try {
-    const canvas = await html2canvas(tempDiv, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: false,
-      backgroundColor: safeColor(pageData.backgroundColor),
-      logging: false,
-      onclone: (clonedDoc) => {
-        clonedDoc.querySelectorAll<HTMLElement>("*").forEach((node) => {
-          const style = window.getComputedStyle(node);
-          if (style.color) node.style.color = safeColor(style.color);
-          if (style.backgroundColor) node.style.backgroundColor = safeColor(style.backgroundColor);
-          if (style.borderColor) node.style.borderColor = safeColor(style.borderColor);
+    try {
+        await new Promise(resolve => setTimeout(resolve, 50)); 
+        
+        const canvas = await html2canvas(tempDiv, {
+            scale: 2, 
+            useCORS: true,
+            allowTaint: false,
+            backgroundColor: safeColor(pageData.backgroundColor),
+            logging: false,
+            onclone: (clonedDoc) => {
+                clonedDoc.querySelectorAll<HTMLElement>("*").forEach((node) => {
+                    const style = window.getComputedStyle(node);
+                    if (style.color) node.style.color = safeColor(style.color);
+                    if (style.backgroundColor)
+                        node.style.backgroundColor = safeColor(style.backgroundColor);
+                    if (style.borderColor)
+                        node.style.borderColor = safeColor(style.borderColor);
+                });
+            },
         });
-      },
-    });
 
-    const imgData = canvas.toDataURL("image/png");
-    document.body.removeChild(tempDiv);
-    return imgData;
-  } catch (error) {
-    console.error("Error rendering page for export:", error);
-    document.body.removeChild(tempDiv);
-    throw error;
-  }
+        const imgData = canvas.toDataURL("image/png");
+        document.body.removeChild(tempDiv);
+        return imgData;
+    } catch (error) {
+        console.error("Error rendering page for export:", error);
+        document.body.removeChild(tempDiv);
+        throw error;
+    }
 };
 
 /**

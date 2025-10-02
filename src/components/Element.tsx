@@ -48,7 +48,7 @@ const Element: React.FC<ElementProps> = ({
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { display: true, position: "top" },
+            legend: { display: false },
           },
           scales: {
             y: { beginAtZero: true },

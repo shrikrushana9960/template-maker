@@ -27,12 +27,12 @@ const Element: React.FC<ElementProps> = ({
       chartInstanceRef.current = new Chart(chartRef.current, {
         type: element.data.chartType || "bar",
         data: {
-          labels: element.data.labels || ["A", "B", "C", "D"],
+          labels: element.data.labels || [],
           datasets: [
             {
               // FIX: Read data from the 'datasets' array with fallbacks
-              label: element.data.datasets?.[0]?.label || "Dataset",
-              data: element.data.datasets?.[0]?.data || [10, 20, 30, 40],
+              label: element.data.datasets?.[0]?.label || "",
+              data: element.data.datasets?.[0]?.data || [],
               backgroundColor: element.data.datasets?.[0]?.backgroundColor || [
                 "rgba(75,192,192,0.6)",
                 "rgba(255,99,132,0.6)",

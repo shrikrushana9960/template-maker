@@ -343,7 +343,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
       {currentPage.elements.map((element) => (
         <div
           key={element.id}
-          className={`p-2 border rounded cursor-pointer ${activeElement?.id === element.id
+          className={`p-2 border rounded ${activeElement?.id === element.id
               ? "bg-blue-100 border-blue-500"
               : "border-gray-200"
             }`}

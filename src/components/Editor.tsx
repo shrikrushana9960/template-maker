@@ -233,7 +233,7 @@ const Editor: React.FC<EditorProps> = ({
 
   return (
     <div 
-      className="flex-1 overflow-auto bg-gray-100"
+      className="flex-1 bg-gray-100 overflow-auto [@media(min-width:1921px)]:overflow-hidden"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}

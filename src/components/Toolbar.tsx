@@ -135,84 +135,129 @@ const Toolbar: React.FC<ToolbarProps> = ({
           onCancel={() => setModal(null)}
         />
       )}
-
-      <div className="container mx-auto px-4 py-2 flex items-center justify-between h-20">
-        {/* Logo */}
-        <div
-          className="flex-shrink-0 cursor-pointer flex items-center justify-center"
-          onClick={() => navigate("/")}
-        >
-          <img
-            src={investSet}
-            alt="Invest Set Logo"
-            className="object-contain"
-          />
-        </div>
-
-        {/* Toolbar */}
-        <div className="flex flex-1 justify-center space-x-6">
+      <div className="container mx-auto px-4 py-2 flex items-center justify-between">
+        <div className="flex items-center space-x-6">
+          <div className="overflow-hidden cursor-pointer"
+            onClick={() => navigate("/")}>
+            <img
+              src={investSet}
+              alt="Invest Set Logo"
+              className="w-full h-full object-contain"
+            />
+          </div>
           {/* File Section */}
-          <div className="flex flex-col items-center justify-center">
-            <span className="text-xs font-semibold text-gray-500 mb-1">File</span>
+          <div className="flex flex-col items-center">
+            <span className="text-xs font-semibold text-gray-500">File</span>
             <div className="flex items-center space-x-2">
-              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
-                <img src={New} alt="New" className="w-6 h-6" />
+              <button
+                onClick={onNewTemplate}
+                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+              >
+                <img src={New}/>
                 <span className="text-xs text-gray-700 mt-1">New</span>
               </button>
-              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
-                <img src={Load} alt="Load" className="w-6 h-6" />
+
+              <button
+                onClick={handleImportClick}
+                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+              >
+                <img src={Load}/>
                 <span className="text-xs text-gray-700 mt-1">Load</span>
               </button>
-              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
-                <img src={Save} alt="Save" className="w-6 h-6" />
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+
+              <button
+                onClick={handleSaveTemplate}
+                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+              >
+                <img src={Save}/>
                 <span className="text-xs text-gray-700 mt-1">Save</span>
               </button>
-              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
-                <img src={Download} alt="Download" className="w-6 h-6" />
-                <span className="text-xs text-gray-700 mt-1">Download</span>
+
+              <button
+                onClick={onSaveTemplate}
+                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+              >
+                <img src={Download} alt="Export PDF" className="w-6 h-6"/>
+                <span className="text-xs text-gray-700 mt-1">
+                  Download template
+                </span>
               </button>
-              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
-                <img src={Export} alt="Export PDF" className="w-6 h-6" />
+
+              <button
+                onClick={onExportPdf}
+                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+              >
+                <img src={Export} alt="Export PDF" className="w-6 h-6"/>
                 <span className="text-xs text-gray-700 mt-1">Export PDF</span>
               </button>
             </div>
           </div>
 
           {/* Pages Section */}
-          <div className="flex flex-col items-center justify-center border-l border-gray-200 pl-4">
-            <span className="text-xs font-semibold text-gray-500 mb-1">Pages</span>
+          <div className="flex flex-col items-center border-l border-gray-200 pl-4">
+            <span className="text-xs font-semibold text-gray-500">Pages</span>
             <div className="flex items-center space-x-2">
-              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
-                <img src={PrevArrow} alt="Prev" className="w-6 h-6" />
+              <button
+                onClick={onPrevPage}
+                disabled={currentPage === 0}
+                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <img src={PrevArrow} alt="Export PDF" className="w-6 h-6"/>
                 <span className="text-xs text-gray-700 mt-1">Prev</span>
               </button>
+
               <span className="text-xs font-medium text-gray-700 mt-1">
                 Page {currentPage + 1} / {totalPages}
               </span>
-              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
-                <img src={NextArrow} alt="Next" className="w-6 h-6" />
+
+              <button
+                onClick={onNextPage}
+                disabled={currentPage === totalPages - 1}
+                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <img src={NextArrow} alt="Export PDF" className="w-6 h-6"/>
                 <span className="text-xs text-gray-700 mt-1">Next</span>
               </button>
-              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
-                <img src={Add} alt="Add" className="w-6 h-6" />
+
+              <button
+                onClick={onAddPage}
+                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+              >
+                <img src={Add} alt="Export PDF" className="w-6 h-6"/>
                 <span className="text-xs text-gray-700 mt-1">Add Page</span>
               </button>
-              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
-                <img src={Delete} alt="Delete" className="w-6 h-6" />
+
+              <button
+                onClick={onDeletePage}
+                disabled={totalPages === 1}
+                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <img src={Delete} alt="Export PDF" className="w-6 h-6"/>
+                
                 <span className="text-xs text-gray-700 mt-1">Delete Page</span>
               </button>
             </div>
           </div>
 
           {/* Elements Section */}
-          <div className="flex flex-col items-center justify-center border-l border-gray-200 pl-4">
-            <span className="text-xs font-semibold text-gray-500 mb-1">Elements</span>
+          <div className="flex flex-col items-center border-l border-gray-200 pl-4">
+            <span className="text-xs font-semibold text-gray-500">
+              Elements
+            </span>
             <div className="flex items-center space-x-2">
               {elementButtons.map((btn) => (
                 <button
                   key={`${btn.type}-${btn.chartType || ""}`}
                   onClick={() => onAddElement(btn.type, btn.chartType)}
-                  className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+                  className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -226,7 +271,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
                   >
                     <path d={btn.icon} />
                   </svg>
-                  <span className="text-xs text-gray-700 mt-1">{btn.label}</span>
+                  <span className="text-xs text-gray-700 mt-1">
+                    {btn.label}
+                  </span>
                 </button>
               ))}
             </div>
@@ -234,7 +281,6 @@ const Toolbar: React.FC<ToolbarProps> = ({
         </div>
       </div>
     </div>
-
   );
 };
 

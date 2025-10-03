@@ -104,16 +104,16 @@ const App: React.FC = () => {
             }));
 
             // Find the cell with the fewest elements
-            const leastUsedCell = cellElementCounts.reduce((prev, current) =>
+            const leastUsedCell :string= cellElementCounts.reduce((prev, current) =>
                 prev.count < current.count ? prev : current
-            ).cell;
+            ).cell as string;
 
             containerId = leastUsedCell;
         }
 
         // If still no container (shouldn't happen), fallback to first cell
         if (!containerId && uniqueCells.length > 0) {
-            containerId = uniqueCells[0];
+            containerId = uniqueCells[0] as string;
         }
 
         if (!containerId) {
@@ -380,6 +380,7 @@ const App: React.FC = () => {
                 onExportPdf={handleExportPdf}
                 onAddElement={addElement}
                 onAddPage={handleAddPage}
+                 currentPages={pages}
                 onDeletePage={handleDeletePage}
                 onPrevPage={() => setCurrentPageIndex(prev => Math.max(0, prev - 1))}
                 onNextPage={() => setCurrentPageIndex(prev => Math.min(pages.length - 1, prev + 1))}

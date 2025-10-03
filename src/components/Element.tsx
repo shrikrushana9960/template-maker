@@ -48,7 +48,7 @@ const Element: React.FC<ElementProps> = ({
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { display: true, position: "top" },
+            legend: { display: false },
           },
           scales: {
             y: { beginAtZero: true },
@@ -83,7 +83,7 @@ const Element: React.FC<ElementProps> = ({
         return (
           <textarea
             className="w-full h-full text-sm resize-none bg-transparent outline-none p-1"
-            value={element.data.text || "Placeholder Text"}
+            value={element.data.text}
             onChange={(e) =>
               onUpdate(element.id, {
                 data: { ...element.data, text: e.target.value },
@@ -127,7 +127,7 @@ const Element: React.FC<ElementProps> = ({
             }}
             suppressContentEditableWarning={true}
           >
-            {element.data.text || "Placeholder Header"}
+            {element.data.text }
           </Tag>
         );
 

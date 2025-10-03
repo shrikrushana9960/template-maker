@@ -1,7 +1,6 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ListingScreen from "./pages/listing";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Editor from "./pages/canvas";
+import ListingScreen from "./pages/listing";
 
 function App() {
   return (

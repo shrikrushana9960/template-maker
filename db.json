@@ -1,13 +1,6 @@
 {
   "templates": [
     {
-      "id": "header",
-      "name": "Header",
-      "createdAt": "2025-10-01T08:57:20.303Z",
-      "updatedAt": "2025-10-01T08:57:20.305Z",
-      "pages": "[{\"elements\":[{\"id\":\"tggxcz34m\",\"type\":\"text\",\"x\":10,\"y\":10,\"width\":200,\"height\":100,\"containerId\":\"B\",\"data\":{\"text\":\"Jayesh\",\"color\":\"#000000\",\"fontSize\":\"14px\",\"isBold\":false,\"isItalic\":false,\"headerSize\":\"h1\"}}],\"layout\":\"{\\\"cells\\\":[[\\\"A\\\",\\\"B\\\"]]}\",\"backgroundColor\":\"#ffffff\",\"gridColor\":\"#f8fafc\"}]"
-    },
-    {
       "id": "body",
       "name": "Body",
       "createdAt": "2025-10-01T09:15:43.034Z",

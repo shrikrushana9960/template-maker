@@ -83,13 +83,16 @@ const ListingScreen: React.FC = () => {
 
     return (
         <div className="">
-            <div className="container flex items-center justify-between bg-white">
-                <img
-                    src={investSet}
-                    alt="Invest Set Logo"
-                    className=" object-contain"
-                />
+            <div className="bg-white shadow-md z-20">
+                <div className="container mx-auto px-4 py-2 flex items-center justify-between">
+                    <img
+                        src={investSet}
+                        alt="Invest Set Logo"
+                        className=" object-contain"
+                    />
+                </div>
             </div>
+
 
 
             <div className="flex justify-end m-4 mt-8">

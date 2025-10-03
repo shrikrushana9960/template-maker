@@ -1,5 +1,6 @@
 import React from 'react';
 import investSet from "../assets/investSet.png"
+import { useNavigate } from "react-router-dom";
 
 interface ToolbarProps {
   onNewTemplate: () => void;
@@ -31,6 +32,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   totalPages,
 }) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
@@ -56,7 +58,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
     <div className="bg-white shadow-md z-20">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-6">
-          <div className=' overflow-hidden'>
+          <div className="overflow-hidden cursor-pointer"
+            onClick={() => navigate("/")}>
             <img
               src={investSet}
               alt="Invest Set Logo"

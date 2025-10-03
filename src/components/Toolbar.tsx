@@ -5,6 +5,16 @@ import type { PageData } from "../types";
 import { saveTemplateToServer } from "../utils/serverApi";
 import Modal from "./Modal";
 import { useNavigate } from "react-router-dom";
+import New from "../assets/new.svg"
+import Load from "../assets/load.svg"
+import Save from "../assets/save.svg"
+import Download from "../assets/download.svg"
+import Export from "../assets/export.svg"
+import PrevArrow from "../assets/prevArrow.svg"
+import NextArrow from "../assets/nextArrow.svg"
+import Add from "../assets/add.svg"
+import Delete from "../assets/delete.svg"
+
 interface ToolbarProps {
   onNewTemplate: () => void;
   currentPages: PageData[];
@@ -125,240 +135,84 @@ const Toolbar: React.FC<ToolbarProps> = ({
           onCancel={() => setModal(null)}
         />
       )}
-      <div className="container mx-auto px-4 py-2 flex items-center justify-between">
-        <div className="flex items-center space-x-6">
-          <div className="overflow-hidden cursor-pointer"
-            onClick={() => navigate("/")}>
-            <img
-              src={investSet}
-              alt="Invest Set Logo"
-              className="w-full h-full object-contain"
-            />
-          </div>
+
+      <div className="container mx-auto px-4 py-2 flex items-center justify-between h-20">
+        {/* Logo */}
+        <div
+          className="flex-shrink-0 cursor-pointer flex items-center justify-center"
+          onClick={() => navigate("/")}
+        >
+          <img
+            src={investSet}
+            alt="Invest Set Logo"
+            className="object-contain"
+          />
+        </div>
+
+        {/* Toolbar */}
+        <div className="flex flex-1 justify-center space-x-6">
           {/* File Section */}
-          <div className="flex flex-col items-center">
-            <span className="text-xs font-semibold text-gray-500">File</span>
+          <div className="flex flex-col items-center justify-center">
+            <span className="text-xs font-semibold text-gray-500 mb-1">File</span>
             <div className="flex items-center space-x-2">
-              <button
-                onClick={onNewTemplate}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6 text-gray-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <line x1="12" y1="18" x2="12" y2="12" />
-                  <line x1="9" y1="15" x2="15" y2="15" />
-                </svg>
+              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
+                <img src={New} alt="New" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">New</span>
               </button>
-
-              <button
-                onClick={handleImportClick}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6 text-gray-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 2v10M12 22v-10M12 2a4 4 0 0 0-4 4v4H4v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10h-4V6a4 4 0 0 0-4-4z" />
-                </svg>
+              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
+                <img src={Load} alt="Load" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Load</span>
               </button>
-
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".json"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-
-              <button
-                onClick={handleSaveTemplate}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6 text-gray-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-                  <polyline points="17 21 17 13 7 13 7 21" />
-                </svg>
+              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
+                <img src={Save} alt="Save" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Save</span>
               </button>
-
-              <button
-                onClick={onSaveTemplate}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6 text-gray-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                <span className="text-xs text-gray-700 mt-1">
-                  Download template
-                </span>
+              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
+                <img src={Download} alt="Download" className="w-6 h-6" />
+                <span className="text-xs text-gray-700 mt-1">Download</span>
               </button>
-
-              <button
-                onClick={onExportPdf}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6 text-gray-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <line x1="16" y1="13" x2="8" y2="13" />
-                  <line x1="16" y1="17" x2="8" y2="17" />
-                  <line x1="10" y1="9" x2="10" y2="13" />
-                </svg>
+              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
+                <img src={Export} alt="Export PDF" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Export PDF</span>
               </button>
             </div>
           </div>
 
           {/* Pages Section */}
-          <div className="flex flex-col items-center border-l border-gray-200 pl-4">
-            <span className="text-xs font-semibold text-gray-500">Pages</span>
+          <div className="flex flex-col items-center justify-center border-l border-gray-200 pl-4">
+            <span className="text-xs font-semibold text-gray-500 mb-1">Pages</span>
             <div className="flex items-center space-x-2">
-              <button
-                onClick={onPrevPage}
-                disabled={currentPage === 0}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6 text-gray-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="15 18 9 12 15 6" />
-                </svg>
+              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
+                <img src={PrevArrow} alt="Prev" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Prev</span>
               </button>
-
               <span className="text-xs font-medium text-gray-700 mt-1">
                 Page {currentPage + 1} / {totalPages}
               </span>
-
-              <button
-                onClick={onNextPage}
-                disabled={currentPage === totalPages - 1}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6 text-gray-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
+              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
+                <img src={NextArrow} alt="Next" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Next</span>
               </button>
-
-              <button
-                onClick={onAddPage}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6 text-gray-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <line x1="12" y1="12" x2="12" y2="18" />
-                  <line x1="9" y1="15" x2="15" y2="15" />
-                </svg>
+              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
+                <img src={Add} alt="Add" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Add Page</span>
               </button>
-
-              <button
-                onClick={onDeletePage}
-                disabled={totalPages === 1}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-6 h-6 text-gray-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                </svg>
+              <button className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors">
+                <img src={Delete} alt="Delete" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Delete Page</span>
               </button>
             </div>
           </div>
 
           {/* Elements Section */}
-          <div className="flex flex-col items-center border-l border-gray-200 pl-4">
-            <span className="text-xs font-semibold text-gray-500">
-              Elements
-            </span>
+          <div className="flex flex-col items-center justify-center border-l border-gray-200 pl-4">
+            <span className="text-xs font-semibold text-gray-500 mb-1">Elements</span>
             <div className="flex items-center space-x-2">
               {elementButtons.map((btn) => (
                 <button
                   key={`${btn.type}-${btn.chartType || ""}`}
                   onClick={() => onAddElement(btn.type, btn.chartType)}
-                  className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+                  className="flex flex-col items-center justify-center p-2 rounded-md hover:bg-gray-100 transition-colors"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -372,27 +226,15 @@ const Toolbar: React.FC<ToolbarProps> = ({
                   >
                     <path d={btn.icon} />
                   </svg>
-                  <span className="text-xs text-gray-700 mt-1">
-                    {btn.label}
-                  </span>
+                  <span className="text-xs text-gray-700 mt-1">{btn.label}</span>
                 </button>
               ))}
             </div>
           </div>
         </div>
-
-        {/* <h1 className="text-xl font-semibold text-gray-800">PDF Template Editor</h1> */}
-
-        {/* <div className="flex items-center space-x-2">
-          <button
-            onClick={onAutofill}
-            className="px-4 py-2 text-sm font-medium text-white bg-yellow-600 rounded-md hover:bg-yellow-700"
-          >
-            Autofill
-          </button>
-        </div> */}
       </div>
     </div>
+
   );
 };
 

@@ -230,51 +230,9 @@ const RightPanel: React.FC<RightPanelProps> = ({
               }`}
             onClick={() => onLayoutChange(layout.layout)}
           >
-            {/* <svg viewBox="0 0 100 60" className="w-full h-12">
-              {layout.layout.includes("A") && (
-                <>
-                  <rect x="5" y="5" width="40" height="50" className="svg-cell" />
-                  <line
-                    x1={5 + 40 / 2}
-                    y1={5}
-                    x2={5 + 40 / 2}
-                    y2={5 + 50}
-                    stroke="black"
-                    strokeWidth="1"
-                  />
-                </>
-              )}
-              {layout.layout.includes("B") && (
-                <rect
-                  x="55"
-                  y="5"
-                  width="40"
-                  height="50"
-                  className="svg-cell"
-                />
-              )}
-              {layout.layout.includes("C") && (
-                <rect
-                  x="5"
-                  y="30"
-                  width="40"
-                  height="25"
-                  className="svg-cell"
-                />
-              )}
-              {layout.layout.includes("D") && (
-                <rect
-                  x="55"
-                  y="30"
-                  width="40"
-                  height="25"
-                  className="svg-cell"
-                />
-              )}
-            </svg> */}
             <svg viewBox="0 0 100 60" className="w-full h-12">
               {(() => {
-                const parsed = JSON.parse(layout.layout); // { cells: [...] }
+                const parsed = JSON.parse(layout.layout);
                 const rows = parsed.cells.length;
                 const rowHeight = 50 / rows;
 
@@ -304,7 +262,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
                 );
               })()}
 
-              {/* Divider lines */}
+              
               {(() => {
                 const parsed = JSON.parse(layout.layout);
                 const rows = parsed.cells.length;
@@ -316,7 +274,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
 
                 const lines: any[] = [];
 
-                // Vertical dividers
+                
                 for (let i = 1; i < cols; i++) {
                   const x = 5 + i * cellWidth;
                   lines.push(

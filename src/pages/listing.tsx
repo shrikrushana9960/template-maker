@@ -7,6 +7,8 @@ import {
 } from "../utils/serverApi";
 import Modal from "../components/Modal";
 import investSet from "../assets/investSet.png"
+import Delete from "../assets/delete.svg"
+import Edit from "../assets/editIcon.svg";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 
@@ -130,29 +132,14 @@ const ListingScreen: React.FC = () => {
                                         className="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 cursor-pointer"
                                         title="Edit"
                                     >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className="w-4 h-4"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                            strokeWidth={2}
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"
-                                            />
-                                        </svg>
+                                        <img src={Edit} alt="Edit" className="w-4 h-4"/>
                                     </button>
                                     <button
                                         onClick={() => handleDelete(t)}
                                         className="p-2 bg-red-600 text-white rounded cursor-pointer"
                                         title="Delete"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 7h12M9 7v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V7M10 7V4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3" />
-                                        </svg>
+                                        <img src={Delete} alt="Delete" className="w-4 h-4"/>
                                     </button>
                                 </td>
                             </tr>

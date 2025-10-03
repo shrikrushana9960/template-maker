@@ -95,8 +95,6 @@ const ListingScreen: React.FC = () => {
                 </div>
             </div>
 
-
-
             <div className="flex justify-end m-4 mt-8">
                 <button
                     onClick={handleCreate}

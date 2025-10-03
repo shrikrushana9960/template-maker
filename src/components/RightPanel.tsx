@@ -347,7 +347,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
               ? "bg-blue-100 border-blue-500"
               : "border-gray-200"
             }`}
-          onClick={() => onTabChange("settings")}
+          // onClick={() => onTabChange("settings")}
         >
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium capitalize">

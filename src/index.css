@@ -93,8 +93,10 @@ body {
   position: relative;
   background: white;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  margin: auto;
-  min-height: 1123px; /* A4 size height */
+  /* margin: auto; */
+  margin-right: auto;
+  margin-left: auto;
+  height: 1123px; /* A4 size height */
   width: 794px; /* A4 size width */
   padding: 16px;
 }
@@ -105,7 +107,7 @@ body {
   padding: 24px;
   overflow-y: auto;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
 }
 

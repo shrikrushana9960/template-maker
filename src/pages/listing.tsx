@@ -86,71 +86,74 @@ const ListingScreen: React.FC = () => {
     return (
         <div className="">
             <div className="bg-white shadow-md z-20">
-                <div className="container mx-auto px-4 py-2 flex items-center justify-between">
+                <div className="container mx-auto px-4 py-2 flex items-center">
                     <img
                         src={investSet}
                         alt="Invest Set Logo"
                         className=" object-contain"
                     />
+                    <span className="ml-2 text-lg font-semibold">Investset</span>
                 </div>
             </div>
 
-            <div className="flex justify-end m-4 mt-8">
-                <button
-                    onClick={handleCreate}
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                >
-                    Create
-                </button>
-            </div>
-            <div className="overflow-x-auto mt-2 p-6">
-                <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded">
-                    <thead className="bg-gray-100">
-                        <tr>
-                            <th className="text-left px-4 py-2 text-sm font-medium text-gray-700">Name</th>
-                            <th className="text-left px-4 py-2 text-sm font-medium text-gray-700">Created Date</th>
-                            <th className="text-left px-4 py-2 text-sm font-medium text-gray-700">Updated Date</th>
-                            <th className="text-left px-4 py-2 text-sm font-medium text-gray-700">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 bg-white">
-                        {templates.map((t) => (
-                            <tr key={t.id}>
-                                <td
-                                    className="px-4 py-2 text-sm text-gray-800 cursor-pointer"
-                                    onClick={() => handleEdit(t.id)}
-                                >
-                                    {t.name}
-                                </td>
-                                <td className="px-4 py-2 text-sm text-gray-600"> {new Date(t.createdAt).toLocaleDateString()}</td>
-                                <td className="px-4 py-2 text-sm text-gray-600"> {new Date(t.updatedAt).toLocaleDateString()}</td>
-                                <td className="px-4 py-2 flex space-x-2">
-                                    <button
-                                        onClick={() => handleEdit(t.id)}
-                                        className="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 cursor-pointer"
-                                        title="Edit"
-                                    >
-                                        <img src={Edit} alt="Edit" className="w-4 h-4"/>
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(t)}
-                                        className="p-2 bg-red-600 text-white rounded cursor-pointer"
-                                        title="Delete"
-                                    >
-                                        <img src={Delete} alt="Delete" className="w-4 h-4"/>
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                        {templates.length === 0 && (
+            <div className="container mx-auto px-4 py-2 ">
+                <div className="flex justify-end mt-8">
+                    <button
+                        onClick={handleCreate}
+                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                    >
+                        Create
+                    </button>
+                </div>
+                <div className="overflow-x-auto mt-2">
+                    <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded">
+                        <thead className="bg-gray-100">
                             <tr>
-                                <td colSpan={3} className="text-center text-sm text-gray-500 py-4">
-                                    No templates found.
-                                </td>
+                                <th className="text-left px-4 py-2 text-sm font-medium text-gray-700">Name</th>
+                                <th className="text-left px-4 py-2 text-sm font-medium text-gray-700">Created Date</th>
+                                <th className="text-left px-4 py-2 text-sm font-medium text-gray-700">Updated Date</th>
+                                <th className="text-left px-4 py-2 text-sm font-medium text-gray-700">Actions</th>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                            {templates.map((t) => (
+                                <tr key={t.id}>
+                                    <td
+                                        className="px-4 py-2 text-sm text-gray-800 cursor-pointer"
+                                        onClick={() => handleEdit(t.id)}
+                                    >
+                                        {t.name}
+                                    </td>
+                                    <td className="px-4 py-2 text-sm text-gray-600"> {new Date(t.createdAt).toLocaleDateString()}</td>
+                                    <td className="px-4 py-2 text-sm text-gray-600"> {new Date(t.updatedAt).toLocaleDateString()}</td>
+                                    <td className="px-4 py-2 flex space-x-2">
+                                        <button
+                                            onClick={() => handleEdit(t.id)}
+                                            className="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 cursor-pointer"
+                                            title="Edit"
+                                        >
+                                            <img src={Edit} alt="Edit" className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(t)}
+                                            className="p-2 bg-red-600 text-white rounded cursor-pointer"
+                                            title="Delete"
+                                        >
+                                            <img src={Delete} alt="Delete" className="w-4 h-4" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                            {templates.length === 0 && (
+                                <tr>
+                                    <td colSpan={3} className="text-center text-sm text-gray-500 py-4">
+                                        No templates found.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
             {modal && (
                 <Modal

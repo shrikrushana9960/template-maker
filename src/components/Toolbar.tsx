@@ -31,6 +31,15 @@ interface ToolbarProps {
   totalPages: number;
 }
 
+interface ModalConfig {
+  title: string;
+  message: string;
+  type: "info" | "confirm" | "input";
+  onConfirm: (templateName: string) => void;
+  onCancel?: () => void;
+  placeholder?: string;
+}
+
 const Toolbar: React.FC<ToolbarProps> = ({
   onNewTemplate,
   onSaveTemplate,
@@ -51,7 +60,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   const [loading, setLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const navigate = useNavigate();
-  const [modal, setModal] = useState<any | null>(null);
+  const [modal, setModal] = useState<ModalConfig | null>(null);
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
   const handleImportClick = () => {
@@ -137,13 +146,14 @@ const Toolbar: React.FC<ToolbarProps> = ({
       )}
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-6">
-          <div className="overflow-hidden cursor-pointer"
+          <div className="overflow-hidden cursor-pointer flex items-center"
             onClick={() => navigate("/")}>
             <img
               src={investSet}
               alt="Invest Set Logo"
               className="w-full h-full object-contain"
             />
+             <span className="ml-2 text-lg font-semibold">Investset</span>
           </div>
           {/* File Section */}
           <div className="flex flex-col items-center">

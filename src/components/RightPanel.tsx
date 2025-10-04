@@ -384,8 +384,22 @@ const RightPanel: React.FC<RightPanelProps> = ({
             Delete
           </button>
         </div>
+         <div>
+          <label className="text-sm font-medium text-gray-700">Element ID</label>
+          <input
+            type="text"
+            value={localElement.id}
+            onChange={(e) =>
+              // NOTE: Changing the ID of an element can break state management (e.g., if the ID is used as a key).
+              // However, implementing the requested functionality to allow modification.
+              handleElementUpdate({ id: e.target.value })
+            }
+            className="w-full p-1 border border-gray-300 rounded text-sm"
+          />
+        </div>
 
         <div className="grid grid-cols-2 gap-2">
+          
           <div>
             <label className="text-sm font-medium text-gray-700">X</label>
             <input

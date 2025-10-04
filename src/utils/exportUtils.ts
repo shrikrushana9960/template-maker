@@ -277,21 +277,19 @@ export const renderPageForExport = async (
     }
 };
 
-/**
- * Export multiple pages as a single PDF.
- */
 export const exportAsPdf = async (pages: PageData[]): Promise<void> => {
   const doc = new jsPDF({
     unit: "px",
     format: "a4",
-    // `hotfixes` is not typed in the latest @types/jspdf, so we cast.
     hotfixes: ["px_scaling"] as unknown as string[],
   });
 
   try {
-    for (let i = 0; i < pages.length; i++) {
+    // Pre-render all pages first
+    const allImages = await Promise.all(pages.map((page) => renderPageForExport(page)));
+
+    allImages.forEach((imgData, i) => {
       if (i > 0) doc.addPage();
-      const imgData = await renderPageForExport(pages[i]);
       doc.addImage(
         imgData,
         "PNG",
@@ -302,8 +300,10 @@ export const exportAsPdf = async (pages: PageData[]): Promise<void> => {
         undefined,
         "FAST"
       );
-    }
-    doc.save("template.pdf");
+    });
+
+    const pdfUrl = doc.output("bloburl"); 
+    window.open(pdfUrl, "_blank");
   } catch (err) {
     console.error("PDF export error:", err);
     throw new Error("Failed to export PDF. Please try again.");

@@ -294,55 +294,82 @@ const App: React.FC = () => {
         });
     };
 
-    const handleAutofill = () => {
-        const layoutData = JSON.parse(currentPage.layout);
-        const uniqueCells = [...new Set(layoutData.cells.flat())];
+   const handleAutofill = () => {
+    // 1. Prepare mock data values
+    const mockText = 'Autofilled sample text for this content area.';
+    const mockLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+    const mockData = [12, 19, 3, 5, 2];
+    const mockTableHeader = ['Metric', 'Q1', 'Q2', 'Q3', 'Q4'];
+    const mockTableData = [
+        mockTableHeader,
+        ['Revenue', '1.2M', '1.5M', '1.8M', '2.1M'],
+        ['Profit', '250K', '300K', '350K', '400K'],
+    ];
+    const mockImageUrl = 'https://picsum.photos/300/200'; // Placeholder image URL
 
-        const newElements: ElementData[] = [];
+    // 2. Map over the existing elements on the current page to update them
+    const updatedElements = currentPage.elements.map(element => {
+        let newUpdates: Partial<ElementData> = {};
+        
+        // Update the data property based on the element type
+        switch (element.type) {
+            case 'header':
+                newUpdates.data = {
+                    ...element.data,
+                    text: `Report Title for ${element.containerId}`,
+                    isBold: true,
+                    fontSize: '32px' 
+                };
+                break;
+            case 'text':
+                newUpdates.data = {
+                    ...element.data,
+                    text: `${mockText} (Container: ${element.containerId})`,
+                };
+                break;
+            case 'image':
+                newUpdates.data = {
+                    ...element.data,
+                    src: mockImageUrl,
+                };
+                break;
+            case 'table':
+                newUpdates.data = {
+                    ...element.data,
+                    table: mockTableData,
+                };
+                break;
+            case 'chart':
+                newUpdates.data = {
+                    ...element.data,
+                    labels: mockLabels,
+                    datasets: [
+                        {
+                            label: `Data for ${element.containerId}`,
+                            data: mockData,
+                            // Preserve existing colors if possible
+                            backgroundColor: element.data.datasets?.[0]?.backgroundColor || 'rgba(75,192,192,0.6)',
+                        },
+                    ],
+                };
+                break;
+            default:
+                // Do nothing for unknown types
+                return element; 
+        }
 
-        uniqueCells.forEach((cell: any, index) => {
-            if (index === 0) {
-                newElements.push({
-                    id: generateId(),
-                    type: 'header',
-                    x: 10,
-                    y: 10,
-                    width: 300,
-                    height: 40,
-                    containerId: cell,
-                    data: {
-                        text: `Header for ${cell}`,
-                        fontSize: '24px',
-                        isBold: true,
-                        color: '#000000'
-                    }
-                });
-            }
+        // Return the updated element
+        return { ...element, ...newUpdates };
+    });
 
-            newElements.push({
-                id: generateId(),
-                type: 'text',
-                x: 10,
-                y: 60,
-                width: 300,
-                height: 80,
-                containerId: cell,
-                data: {
-                    text: `This is content for cell ${cell}. You can add text, images, tables, or charts here.`,
-                    fontSize: '14px',
-                    color: '#000000'
-                }
-            });
-        });
-
-        setPages(prev => prev.map((page, index) =>
-            index === currentPageIndex ? {
-                ...page,
-                elements: [...page.elements, ...newElements]
-            } : page
-        ));
-    };
-
+    // 3. Update the state with the modified elements array
+    setPages(prev => prev.map((page, index) =>
+        index === currentPageIndex ? {
+            ...page,
+            elements: updatedElements, // Replace old elements with updated ones
+        } : page
+    ));
+};
     const handleLayoutChange = (layout: string) => {
         const layoutData = JSON.parse(layout);
         const newCells = layoutData.cells.flat();

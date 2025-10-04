@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import investSet from "../assets/investSet.png"
+import investSet from "../assets/investSet.png";
 import toastr from "toastr";
 import type { PageData } from "../types";
 import { saveTemplateToServer } from "../utils/serverApi";
 import Modal from "./Modal";
 import { useNavigate } from "react-router-dom";
-import New from "../assets/new.svg"
-import Load from "../assets/load.svg"
-import Save from "../assets/save.svg"
-import Download from "../assets/download.svg"
-import Export from "../assets/export.svg"
-import PrevArrow from "../assets/prevArrow.svg"
-import NextArrow from "../assets/nextArrow.svg"
-import Add from "../assets/add.svg"
-import Delete from "../assets/delete.svg"
+import New from "../assets/new.svg";
+import Load from "../assets/load.svg";
+import Save from "../assets/save.svg";
+import Download from "../assets/download.svg";
+import Export from "../assets/export.svg";
+import PrevArrow from "../assets/prevArrow.svg";
+import NextArrow from "../assets/nextArrow.svg";
+import Add from "../assets/add.svg";
+import Delete from "../assets/delete.svg";
 
 interface ToolbarProps {
   onNewTemplate: () => void;
@@ -89,7 +89,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
           } catch (error) {
             setModal(null);
             toastr.error(
-              `Failed to save template: ${error instanceof Error ? error.message : "Unknown error"
+              `Failed to save template: ${
+                error instanceof Error ? error.message : "Unknown error"
               }`
             );
           } finally {
@@ -146,14 +147,16 @@ const Toolbar: React.FC<ToolbarProps> = ({
       )}
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-6">
-          <div className="overflow-hidden cursor-pointer flex items-center"
-            onClick={() => navigate("/")}>
+          <div
+            className="overflow-hidden cursor-pointer flex items-center"
+            onClick={() => navigate("/")}
+          >
             <img
               src={investSet}
               alt="Invest Set Logo"
               className="w-full h-full object-contain"
             />
-             <span className="ml-2 text-lg font-semibold">Investset</span>
+            <span className="ml-2 text-lg font-semibold">Investset</span>
           </div>
           {/* File Section */}
           <div className="flex flex-col items-center">
@@ -163,7 +166,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 onClick={onNewTemplate}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
               >
-                <img src={New}/>
+                <img src={New} />
                 <span className="text-xs text-gray-700 mt-1">New</span>
               </button>
 
@@ -171,7 +174,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 onClick={handleImportClick}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
               >
-                <img src={Load}/>
+                <img src={Load} />
                 <span className="text-xs text-gray-700 mt-1">Load</span>
               </button>
 
@@ -187,7 +190,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 onClick={handleSaveTemplate}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
               >
-                <img src={Save}/>
+                <img src={Save} />
                 <span className="text-xs text-gray-700 mt-1">Save</span>
               </button>
 
@@ -195,17 +198,23 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 onClick={onSaveTemplate}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
               >
-                <img src={Download} alt="Export PDF" className="w-6 h-6"/>
+                <img src={Download} alt="Export PDF" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">
                   Download template
                 </span>
               </button>
-
+              <button
+                onClick={onAutofill}
+                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+              >
+                <img src={Download} alt="Autofill" className="w-6 h-6" />
+                <span className="text-xs text-gray-700 mt-1">Autofill</span>
+              </button>
               <button
                 onClick={onExportPdf}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
               >
-                <img src={Export} alt="Export PDF" className="w-6 h-6"/>
+                <img src={Export} alt="Export PDF" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Export PDF</span>
               </button>
             </div>
@@ -220,7 +229,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 disabled={currentPage === 0}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <img src={PrevArrow} alt="Export PDF" className="w-6 h-6"/>
+                <img src={PrevArrow} alt="Export PDF" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Prev</span>
               </button>
 
@@ -233,7 +242,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 disabled={currentPage === totalPages - 1}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <img src={NextArrow} alt="Export PDF" className="w-6 h-6"/>
+                <img src={NextArrow} alt="Export PDF" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Next</span>
               </button>
 
@@ -241,7 +250,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 onClick={onAddPage}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
               >
-                <img src={Add} alt="Export PDF" className="w-6 h-6"/>
+                <img src={Add} alt="Export PDF" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Add Page</span>
               </button>
 
@@ -250,8 +259,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 disabled={totalPages === 1}
                 className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <img src={Delete} alt="Export PDF" className="w-6 h-6"/>
-                
+                <img src={Delete} alt="Export PDF" className="w-6 h-6" />
+
                 <span className="text-xs text-gray-700 mt-1">Delete Page</span>
               </button>
             </div>

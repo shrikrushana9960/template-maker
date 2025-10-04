@@ -136,6 +136,7 @@ export const renderPageForExport = async (
                 type: chartType as any, 
                 data: chartData, 
                 options: {
+                     animation: false,
                     maintainAspectRatio: false,
                     responsive: false, 
                     plugins: { legend: { display: true } },

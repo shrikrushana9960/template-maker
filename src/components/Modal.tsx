@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 interface ModalProps {
   title: string;
   message?: string;
-  onConfirm?: ((inputValue?: string) => void) | (() => void); // allow both
+  onConfirm?: ((inputValue?: string) => void) | (() => void); 
   onCancel?: () => void;
-  type?: 'info' | 'confirm' | 'input'; // 'input' for textfield
-  placeholder?: string; // optional placeholder for input
+  type?: 'info' | 'confirm' | 'input'; 
+  placeholder?: string; 
 }
 
 const Modal: React.FC<ModalProps> = ({

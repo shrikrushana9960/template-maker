@@ -60,7 +60,7 @@ export const renderPageForExport = async (
     });
 
     // 3. Create grid cells and map them to IDs
-    const uniqueCells = [...new Set(layoutData.cells.flat())];
+    const uniqueCells :string[] = [...new Set(layoutData.cells.flat())] as string[];
     const cellDivs: Record<string, HTMLDivElement> = {};
 
     uniqueCells.forEach((cell: string) => {
@@ -278,7 +278,7 @@ export const renderPageForExport = async (
     }
 };
 
-export const exportAsPdf = async (pages: PageData[]): Promise<void> => {
+export const exportAsPdf = async (pages: PageData[],name?:string): Promise<void> => {
     const doc = new jsPDF({
         unit: "px",
         format: "a4",
@@ -303,8 +303,9 @@ export const exportAsPdf = async (pages: PageData[]): Promise<void> => {
             );
         });
 
-        const pdfUrl = doc.output("bloburl"); 
-        window.open(pdfUrl, "_blank");
+        // const pdfUrl = doc.output("bloburl"); 
+        // window.open(pdfUrl, "_blank");
+        doc.save(name||"template.pdf")
     } catch (err) {
         console.error("PDF export error:", err);
         throw new Error("Failed to export PDF. Please try again.");

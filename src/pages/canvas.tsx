@@ -437,7 +437,7 @@ const App: React.FC = () => {
                     onElementUpdate={updateElement}
                     onElementDelete={deleteElement}
                     onLayoutChange={handleLayoutChange}
-                    activeContainer={activeContainer}
+                    activeContainer={activeContainer as string}
                     onLoadTemplate={handleLoadTemplate}
                     currentPages={pages} // Pass all pages
                 />

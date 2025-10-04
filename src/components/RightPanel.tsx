@@ -20,6 +20,7 @@ interface RightPanelProps {
   onElementUpdate: (id: string, updates: Partial<ElementData>) => void;
   onElementDelete: (id: string) => void;
   onLayoutChange: (layout: string) => void;
+    activeContainer?: string;
   onLoadTemplate: (pages: PageData[]) => void;
   currentPages: PageData[];
 }
@@ -28,7 +29,7 @@ interface ModalConfig {
   title: string;
   message: string;
   type: "info" | "confirm" | "input";
-  onConfirm: (templateName: string) => void;
+  onConfirm: ((inputValue?: string) => void) | (() => void); 
   onCancel?: () => void;
   placeholder?: string;
 }
@@ -135,28 +136,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
     });
   };
 
-  const handleDeleteTemplate = (template: Template) => {
-    setModal({
-      title: "Delete Template",
-      message: `Are you sure you want to delete template "${template.name}"?`,
-      type: "confirm",
-      onConfirm: async () => {
-        try {
-          await deleteTemplateFromServer(template.id);
-          await loadTemplates();
-          setModal(null);
-          toastr.success(`Template "${template.name}" deleted successfully!`);
-        } catch (error) {
-          toastr.error(
-            `Failed to delete template: ${error instanceof Error ? error.message : "Unknown error"
-            }`
-          );
-          setModal(null);
-        }
-      },
-      onCancel: () => setModal(null),
-    });
-  };
+ 
 
  
   useEffect(() => {

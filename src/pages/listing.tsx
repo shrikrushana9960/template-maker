@@ -29,7 +29,7 @@ interface ModalConfig {
   title: string;
   message: string;
   type: "info" | "confirm" | "input";
-  onConfirm: (templateName: string) => void;
+  onConfirm: ((inputValue?: string) => void) | (() => void); 
   onCancel?: () => void;
   placeholder?: string;
 }
@@ -68,7 +68,7 @@ const ListingScreen: React.FC = () => {
   const loadTemplates = async () => {
     try {
       const serverTemplates = await loadTemplatesFromServer();
-      setTemplates(serverTemplates);
+      setTemplates(serverTemplates as Templates[]);
     } catch (error) {
       console.error("Failed to load templates:", error);
       setTemplates([]);
@@ -93,7 +93,7 @@ const ListingScreen: React.FC = () => {
       type: "confirm",
       onConfirm: async () => {
         try {
-          await deleteTemplateFromServer(template.id);
+          await deleteTemplateFromServer(template.id as string);
           await loadTemplates();
           setModal(null);
           toastr.success(`Template "${template.name}" deleted successfully!`);
@@ -188,7 +188,7 @@ const ListingScreen: React.FC = () => {
     );
     try {
       // 1. Load the template
-      const response = await loadTemplateFromServer(template.id);
+      const response = await loadTemplateFromServer(template.id as string);
       const loadedPages: PageData[] = JSON.parse(response?.pages);
 
       // 2. Apply the Richened report data fill
@@ -196,7 +196,7 @@ const ListingScreen: React.FC = () => {
 
       // 3. Export as PDF
       toastr.info("Generating PDF...");
-      await exportAsPdf(mockedPages);
+      await exportAsPdf(mockedPages,template.name+(new Date().toISOString())+".pdf");
 
       toastr.success(
         `Mock data applied and PDF exported successfully for "${template.name}"!`

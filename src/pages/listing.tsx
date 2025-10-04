@@ -10,6 +10,7 @@ import {
 } from "../utils/serverApi";
 import Modal from "../components/Modal";
 import investSet from "../assets/investSet.png";
+import reportDataJson from './reportData.json';
 import Delete from "../assets/delete.svg";
 import { exportAsPdf } from "../utils/exportUtils";
 import Edit from "../assets/editIcon.svg";
@@ -52,6 +53,7 @@ const LoadingOverlay: React.FC<{ message?: string }> = ({ message }) => (
 );
 
 const ListingScreen: React.FC = () => {
+  const reportData: any = reportDataJson;
   const [templates, setTemplates] = useState<Templates[]>([]);
   const [modal, setModal] = useState<ModalConfig | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -107,151 +109,78 @@ const ListingScreen: React.FC = () => {
       onCancel: () => setModal(null),
     });
   };
-  
+
   // FIX: Replaced applyAutofillToPages with logic that uses structured data
   const applyReportFillToPages = (pages: PageData[]): PageData[] => {
-    // 1. Richer, Structured Report Data (Copied from canvas.tsx)
-    const reportData = {
-        title: 'Q3 Investment Portfolio Review',
-        summary: `The portfolio delivered a strong performance in Q3, driven primarily by gains in the Technology and Healthcare sectors. Net return for the quarter was 7.8%, significantly outpacing the benchmark index's 4.5%. We recommend maintaining the current allocation with a slight overweight to growth stocks.`,
-        keyMetricsTable: [
-            ['Metric', 'Q1', 'Q2', 'Q3', 'YTD'],
-            ['Total Return', '2.1%', '4.9%', '7.8%', '16.1%'],
-            ['Volatility (Ann.)', '12.5%', '11.8%', '10.5%', '10.5%'],
-            ['AUM (Millions)', '$540M', '$565M', '$610M', '$610M'],
-        ],
-        sectorPerformance: {
-            labels: ['Tech', 'Health', 'Finance', 'Energy', 'Real Estate'],
-            data: [25, 18, 12, 8, 5], // Percentages
-            colors: ['rgba(59, 130, 246, 0.8)', 'rgba(16, 185, 129, 0.8)', 'rgba(245, 158, 11, 0.8)', 'rgba(239, 68, 68, 0.8)', 'rgba(99, 102, 241, 0.8)'],
-        },
-        marketTrend: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-            data: [100, 102, 105, 103, 108, 112, 115, 110, 118], // Index value
-            label: 'Portfolio Index Value',
-        },
-        clientPhoto: 'https://picsum.photos/400/300?random=1',
-        disclaimer: 'This report is for informational purposes only and is not investment advice. Past performance is not indicative of future results.',
-    };
+   
 
     return pages.map((page) => {
-      let headerCount = 0;
-      let textCount = 0;
-      let tableCount = 0;
-      let chartCount = 0;
-      let imageCount = 0;
-      
-      const textElements = page.elements.filter(e => e.type === 'text');
-      const lastTextIndex = textElements.length - 1;
-
+      const elementCounters: Record<ElementData["type"], number> = {
+        header: 0,
+        text: 0,
+        table: 0,
+        chart: 0,
+        image: 0,
+      };
 
       return {
         ...page,
         elements: page.elements.map((element) => {
+          const elementIndex = elementCounters[element.type]++;
           let newUpdates: Partial<ElementData> = {};
-
+          console.log(element?.id);
           switch (element.type) {
-            case "header":
-              headerCount++;
-              if (headerCount === 1) {
-                newUpdates.data = {
-                  ...element.data,
-                  text: reportData.title,
-                  isBold: true,
-                  fontSize: "36px",
-                  color: "#1e3a8a", 
-                };
-              } else {
-                newUpdates.data = {
-                  ...element.data,
-                  text: `Section Header ${headerCount - 1}`,
-                  isBold: true,
-                  fontSize: "24px",
-                };
-              }
-              break;
             case "text":
-              const currentTextIndex = textCount;
-              textCount++;
-              
-              if (currentTextIndex === 0) {
-                newUpdates.data = {
-                  ...element.data,
-                  text: reportData.summary,
-                };
-              } else if (currentTextIndex === lastTextIndex) {
-                newUpdates.data = {
-                  ...element.data,
-                  text: reportData.disclaimer,
-                  fontSize: "10px",
-                  color: "#6b7280",
-                };
-              } else {
-                newUpdates.data = {
-                  ...element.data,
-                  text: `Detailed paragraph ${currentTextIndex} about the report findings. This is a longer text block to simulate full content.`,
-                };
-              }
+              newUpdates.data = {
+                ...element.data,
+                text: reportData?.[element?.id] || "",
+              };
               break;
+
             case "image":
-              imageCount++;
-              newUpdates.data = {
-                ...element.data,
-                src: reportData.clientPhoto.replace('random=1', `random=${imageCount}`),
-              };
+                newUpdates.data = {
+                  ...element.data,
+                  src: reportData[element?.id] || "",
+                };
               break;
+
             case "table":
-              tableCount++;
-              newUpdates.data = {
-                ...element.data,
-                table: reportData.keyMetricsTable,
-              };
+            
+                newUpdates.data = {
+                  ...element.data,
+                  table: reportData[element?.id] || [],
+                };
+             
               break;
+
             case "chart":
-              chartCount++;
-              if (chartCount === 1) {
-                // Sector performance chart
                 newUpdates.data = {
                   ...element.data,
-                  labels: reportData.sectorPerformance.labels,
-                  chartType: element.data.chartType || 'pie',
+                  labels: reportData?.[element?.id]?.labels || [],
+                  chartType: element.data.chartType || "pie",
                   datasets: [
                     {
-                      label: 'Sector Allocation',
-                      data: reportData.sectorPerformance.data,
-                      backgroundColor: reportData.sectorPerformance.colors,
+                      label: "",
+                      data: reportData?.[element?.id]?.data || [],
+                      backgroundColor:
+                        reportData?.[element?.id]?.colors || [],
                     },
                   ],
                 };
-              } else {
-                // Market trend line chart
-                newUpdates.data = {
-                  ...element.data,
-                  labels: reportData.marketTrend.labels,
-                  chartType: element.data.chartType || 'line',
-                  datasets: [
-                    {
-                      label: reportData.marketTrend.label,
-                      data: reportData.marketTrend.data,
-                      backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                      borderColor: 'rgba(59, 130, 246, 1)',
-                    },
-                  ],
-                };
-              }
+           
               break;
+
             default:
-              // Do nothing for unknown types
-              return element;
+              newUpdates.data = { ...element.data, text: "" };
+              break;
           }
 
-          // Return the updated element
           return { ...element, ...newUpdates };
         }),
       };
     });
   };
-  
+
   const handleMockAndExport = async (template: Template) => {
     setLoading(true);
     toastr.info(
@@ -282,7 +211,7 @@ const ListingScreen: React.FC = () => {
 
   return (
     <div className="">
-        {loading && <LoadingOverlay message="Generating PDF, please wait..." />}
+      {loading && <LoadingOverlay message="Generating PDF, please wait..." />}
 
       <div className="bg-white shadow-md z-20">
         <div className="container mx-auto px-4 py-2 flex items-center">
@@ -322,7 +251,7 @@ const ListingScreen: React.FC = () => {
                 </th>
               </tr>
             </thead>
-            
+
             <tbody className="divide-y divide-gray-200 bg-white ">
               {templates.map((t) => (
                 <tr key={t.id}>

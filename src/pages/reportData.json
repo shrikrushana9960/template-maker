@@ -1,0 +1,86 @@
+{
+  "header": "Q3 Investment Portfolio Review",
+  "description1": "The portfolio delivered a strong performance in Q3, driven primarily by gains in the Technology and Healthcare sectors. Net return for the quarter was 7.8%, significantly outpacing the benchmark index's 4.5%. We recommend maintaining the current allocation with a slight overweight to growth stocks. The strategy continues to focus on secular growth themes while managing volatility, reflected in the improved Sharpe Ratio.",
+  "graph1": {
+    "labels": [
+      "Tech (25%)",
+      "Health (18%)",
+      "Finance (12%)",
+      "Energy (8%)",
+      "Real Estate (5%)",
+      "Consumer Goods (6%)",
+      "Industrials (4%)",
+      "Cash & Fixed Income (22%)"
+    ],
+    "data": [25, 18, 12, 8, 5, 6, 4, 22],
+    "colors": [
+      "rgba(59, 130, 246, 0.8)",
+      "rgba(16, 185, 129, 0.8)",
+      "rgba(245, 158, 11, 0.8)",
+      "rgba(239, 68, 68, 0.8)",
+      "rgba(99, 102, 241, 0.8)",
+      "rgba(236, 72, 153, 0.8)",
+      "rgba(139, 92, 246, 0.8)",
+      "rgba(107, 114, 128, 0.8)"
+    ]
+  },
+  "table1": [
+    ["Metric", "Q1", "Q2", "Q3", "YTD"],
+    ["Total Return", "2.1%", "4.9%", "7.8%", "16.1%"],
+    ["Benchmark Return", "1.5%", "4.0%", "4.5%", "10.4%"],
+    ["Volatility (Ann.)", "12.5%", "11.8%", "10.5%", "10.5%"],
+    ["Sharpe Ratio (Ann.)", "0.12", "0.35", "0.74", "0.58"],
+    ["Sortino Ratio", "0.18", "0.42", "0.88", "0.63"],
+    ["Max Drawdown", "-5.4%", "-3.8%", "-2.1%", "-2.1%"],
+    ["Beta vs Benchmark", "1.02", "0.98", "0.94", "0.98"],
+    ["AUM (Millions)", "$540M", "$565M", "$610M", "$610M"]
+  ],
+  "header2": "Sector Performance & Risk Overview",
+  "description2": "Technology and Healthcare led portfolio growth in Q3, accounting for nearly 43% of total gains. Finance and Energy showed modest returns but provided stability through dividend income. The inclusion of fixed income (22%) provides a significant defensive ballast. The Sharpe Ratio increase from Q2 (0.35) to Q3 (0.74) indicates a strong improvement in risk-adjusted returns.",
+  "table2": [
+    ["Sector", "Q1 Return", "Q2 Return", "Q3 Return", "YTD Return", "Volatility"],
+    ["Technology", "3.8%", "7.2%", "10.1%", "22.4%", "14.5%"],
+    ["Healthcare", "2.9%", "5.1%", "8.4%", "17.3%", "12.1%"],
+    ["Finance", "1.1%", "2.8%", "4.2%", "8.3%", "9.8%"],
+    ["Energy", "-0.5%", "1.9%", "3.6%", "5.1%", "10.6%"],
+    ["Real Estate", "0.7%", "2.1%", "3.2%", "6.0%", "8.4%"],
+    ["Consumer Goods", "1.2%", "3.0%", "4.7%", "8.9%", "9.5%"],
+    ["Industrials", "1.0%", "2.3%", "3.8%", "7.1%", "9.2%"],
+    ["Fixed Income", "0.8%", "1.4%", "1.9%", "4.1%", "4.2%"]
+  ],
+  "header3": "Portfolio vs. Benchmark Growth Trend (YTD)",
+  "graph3": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+    "data": [100, 102, 105, 103, 108, 112, 115, 110, 118],
+    "label": "Portfolio Index Value",
+    "colors": ["rgba(59, 130, 246, 1.0)"]
+  },
+  "graph4": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+    "data": [100, 101, 104, 102, 106, 107, 109, 108, 110.4],
+    "label": "Benchmark Index Value",
+    "colors": ["rgba(239, 68, 68, 1.0)"]
+  },
+  "graph5": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+    "data": [98, 100, 103, 101, 106, 110, 114, 111, 117],
+    "label": "Cumulative Portfolio Performance (Starting Index 100)",
+    "colors": ["rgba(16, 185, 129, 1.0)"]
+  },
+  "graph6": {
+    "labels": ["Tech", "Health", "Finance", "Energy", "Real Estate", "Consumer Goods", "Industrials", "Fixed Income"],
+    "data": [10.1, 8.4, 4.2, 3.6, 3.2, 4.7, 3.8, 1.9],
+    "label": "Sector Quarterly Returns (%)",
+    "colors": [
+      "rgba(59, 130, 246, 0.9)",
+      "rgba(16, 185, 129, 0.9)",
+      "rgba(245, 158, 11, 0.9)",
+      "rgba(239, 68, 68, 0.9)",
+      "rgba(99, 102, 241, 0.9)",
+      "rgba(236, 72, 153, 0.9)",
+      "rgba(139, 92, 246, 0.9)",
+      "rgba(107, 114, 128, 0.9)"
+    ]
+  },
+  "poster1": "https://images.unsplash.com/photo-1707157281599-d155d1da5b4c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+}

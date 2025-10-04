@@ -1,0 +1,83 @@
+{
+  "dynamicData": [
+    {
+      "id": "report1_Q3_2025",
+      "name": "Q3 2025 Performance Report",
+      "description": "Financial and market data for Q3 2025.",
+      "dataElements": {
+        "chart_d69sv5wuz": {
+          "labels": ["Jul", "Aug", "Sep"],
+          "datasets": [
+            {
+              "label": "Quarterly Revenue",
+              "data": [72, 85, 91],
+              "backgroundColor": "rgba(75, 192, 192, 0.6)",
+              "borderColor": "rgba(75, 192, 192, 1)"
+            }
+          ]
+        },
+        "table_ttg2v2vx8": {
+          "table": [
+            ["Metric", "Value", "Change"],
+            ["Revenue", "$91M", "+6%"],
+            ["Profit", "$12M", "+15%"],
+            ["Users", "1.2M", "+10%"]
+          ]
+        },
+        "text_pmsjoljhy": {
+          "text": "Quarter 3 2025 showed strong growth, with revenue exceeding projections due to successful product launches in August.",
+          "color": "#1f2937",
+          "fontSize": "16px",
+          "isBold": true
+        },
+        "image_ihefh5b3o": {
+          "src": "https://example.com/images/q3_graph.png"
+        }
+      }
+    },
+    {
+      "id": "report2_team_stats",
+      "name": "Team A Quarterly Stats",
+      "description": "Individual team statistics for recent projects.",
+      "dataElements": {
+        "chart_d69sv5wuz": {
+          "labels": ["Project X", "Project Y", "Project Z"],
+          "datasets": [
+            {
+              "label": "Hours Logged",
+              "data": [120, 95, 150],
+              "backgroundColor": "rgba(255, 99, 132, 0.6)",
+              "borderColor": "rgba(255, 99, 132, 1)"
+            }
+          ]
+        },
+        "table_ttg2v2vx8": {
+          "table": [
+            ["Team Member", "Tasks Completed", "Bugs Filed"],
+            ["Alice", "45", "3"],
+            ["Bob", "38", "1"],
+            ["Charlie", "52", "5"]
+          ]
+        },
+        "text_pmsjoljhy": {
+          "text": "Team A successfully completed three major projects in the quarter, with strong performance across the board.",
+          "color": "#059669",
+          "fontSize": "18px",
+          "isBold": true
+        },
+        "image_ihefh5b3o": {
+          "src": "https://example.com/images/team_photo.jpg"
+        }
+      }
+    }
+  ],
+  "templates": [
+    {
+      "id": "65b6c366-1244-4bef-83d7-4298329cecf0",
+      "name": "New",
+      "createdAt": "2025-10-04T06:51:32.280Z",
+      "updatedAt": "2025-10-04T06:51:32.280Z",
+      "pages": "[{\"elements\":[{\"id\":\"pmsjoljhy\",\"type\":\"text\",\"x\":0,\"y\":0,\"width\":762.0023803710938,\"height\":100,\"containerId\":\"A\",\"data\":{\"text\":\"New Text\",\"color\":\"#000000\",\"fontSize\":\"14px\",\"isBold\":false,\"isItalic\":false,\"headerSize\":\"h1\"}},{\"id\":\"ihefh5b3o\",\"type\":\"image\",\"x\":0,\"y\":105.72915649414062,\"width\":762.0023803710938,\"height\":150,\"containerId\":\"A\",\"data\":{\"text\":\"\",\"color\":\"#000000\",\"fontSize\":\"14px\",\"isBold\":false,\"isItalic\":false,\"headerSize\":\"h1\"}},{\"id\":\"ttg2v2vx8\",\"type\":\"table\",\"x\":1.7291717529296875,\"y\":266.7291564941406,\"width\":760.2732086181641,\"height\":100,\"containerId\":\"A\",\"data\":{\"text\":\"\",\"color\":\"#000000\",\"fontSize\":\"14px\",\"isBold\":false,\"isItalic\":false,\"headerSize\":\"h1\",\"table\":[[\"Header 1\",\"Header 2\",\"Header 3\"],[\"Data 1\",\"Data 2\",\"Data 3\"]]}},{\"id\":\"d69sv5wuz\",\"type\":\"chart\",\"x\":10.729171752929688,\"y\":391.7291679382324,\"width\":403,\"height\":202,\"containerId\":\"A\",\"data\":{\"text\":\"\",\"color\":\"#000000\",\"fontSize\":\"14px\",\"isBold\":false,\"isItalic\":false,\"headerSize\":\"h1\",\"chartType\":\"line\",\"chartData\":{\"labels\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\"],\"datasets\":[{\"label\":\"Sample Data\",\"data\":[65,59,80,81],\"backgroundColor\":\"rgba(75, 192, 192, 0.2)\",\"borderColor\":\"rgba(75, 192, 192, 1)\",\"borderWidth\":2,\"tension\":0.4}]}}}],\"layout\":\"{\\\"cells\\\":[[\\\"A\\\"]]}\",\"backgroundColor\":\"#ffffff\",\"gridColor\":\"#f8fafc\"},{\"elements\":[{\"id\":\"qhp8ozibx\",\"type\":\"chart\",\"x\":10,\"y\":10,\"width\":200,\"height\":100,\"containerId\":\"B\",\"data\":{\"text\":\"\",\"color\":\"#000000\",\"fontSize\":\"14px\",\"isBold\":false,\"isItalic\":false,\"headerSize\":\"h1\",\"chartType\":\"bar\",\"chartData\":{\"labels\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\"],\"datasets\":[{\"label\":\"Sample Data\",\"data\":[65,59,80,81],\"backgroundColor\":\"rgba(153, 102, 255, 0.2)\",\"borderColor\":\"rgba(153, 102, 255, 1)\",\"borderWidth\":2,\"tension\":0}]}}},{\"id\":\"d9tfzmoy6\",\"type\":\"chart\",\"x\":10,\"y\":10,\"width\":200,\"height\":100,\"containerId\":\"A\",\"data\":{\"text\":\"\",\"color\":\"#000000\",\"fontSize\":\"14px\",\"isBold\":false,\"isItalic\":false,\"headerSize\":\"h1\",\"chartType\":\"line\",\"chartData\":{\"labels\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\"],\"datasets\":[{\"label\":\"Sample Data\",\"data\":[65,59,80,81],\"backgroundColor\":\"rgba(75, 192, 192, 0.2)\",\"borderColor\":\"rgba(75, 192, 192, 1)\",\"borderWidth\":2,\"tension\":0.4}]}}}],\"layout\":\"{\\\"cells\\\":[[\\\"A\\\",\\\"B\\\"]]}\",\"backgroundColor\":\"#ffffff\",\"gridColor\":\"#f8fafc\"}]"
+    }
+  ]
+}

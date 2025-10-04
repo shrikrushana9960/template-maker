@@ -99,7 +99,9 @@ export const renderPageForExport = async (
             backgroundColor: "white",
             boxSizing: "border-box",
             padding: "8px",
-            border: "1px solid #e5e7eb",
+            // FIX: Removed the default border here that was causing the issue
+            border: "none",
+            boxShadow: "none",
         });
 
         // Handle different element types
@@ -112,7 +114,6 @@ export const renderPageForExport = async (
             elDiv.appendChild(canvas);
 
             const chartType = el.data?.chartType;
-            console.log({...el.data})
             const chartData = {
                 labels: el.data?.labels || ["A", "B", "C", "D"],
                 datasets: [
@@ -139,7 +140,7 @@ export const renderPageForExport = async (
                      animation: false,
                     maintainAspectRatio: false,
                     responsive: false, 
-                    plugins: { legend: { display: true } },
+                    plugins: { legend: { display: false } },
                     scales: {
                         x: { grid: { display: false } },
                         y: {
@@ -278,34 +279,34 @@ export const renderPageForExport = async (
 };
 
 export const exportAsPdf = async (pages: PageData[]): Promise<void> => {
-  const doc = new jsPDF({
-    unit: "px",
-    format: "a4",
-    hotfixes: ["px_scaling"] as unknown as string[],
-  });
-
-  try {
-    // Pre-render all pages first
-    const allImages = await Promise.all(pages.map((page) => renderPageForExport(page)));
-
-    allImages.forEach((imgData, i) => {
-      if (i > 0) doc.addPage();
-      doc.addImage(
-        imgData,
-        "PNG",
-        0,
-        0,
-        doc.internal.pageSize.getWidth(),
-        doc.internal.pageSize.getHeight(),
-        undefined,
-        "FAST"
-      );
+    const doc = new jsPDF({
+        unit: "px",
+        format: "a4",
+        hotfixes: ["px_scaling"] as unknown as string[],
     });
 
-    const pdfUrl = doc.output("bloburl"); 
-    window.open(pdfUrl, "_blank");
-  } catch (err) {
-    console.error("PDF export error:", err);
-    throw new Error("Failed to export PDF. Please try again.");
-  }
+    try {
+        // Pre-render all pages first
+        const allImages = await Promise.all(pages.map((page) => renderPageForExport(page)));
+
+        allImages.forEach((imgData, i) => {
+            if (i > 0) doc.addPage();
+            doc.addImage(
+                imgData,
+                "PNG",
+                0,
+                0,
+                doc.internal.pageSize.getWidth(),
+                doc.internal.pageSize.getHeight(),
+                undefined,
+                "FAST"
+            );
+        });
+
+        const pdfUrl = doc.output("bloburl"); 
+        window.open(pdfUrl, "_blank");
+    } catch (err) {
+        console.error("PDF export error:", err);
+        throw new Error("Failed to export PDF. Please try again.");
+    }
 };

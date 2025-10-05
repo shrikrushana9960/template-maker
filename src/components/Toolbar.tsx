@@ -141,7 +141,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
           title={modal.title}
           message={modal.message}
           type={modal.type}
-          onConfirm={modal.onConfirm}
+          onConfirm={modal.onConfirm as  ((inputValue?: string) => void) | (() => void)}
           onCancel={() => setModal(null)}
         />
       )}

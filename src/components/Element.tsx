@@ -99,38 +99,7 @@ const Element: React.FC<ElementProps> = ({
           />
         );
 
-      case "header":
-        const Tag =
-          (element.data.headerSize as keyof JSX.IntrinsicElements) || "h1";
-        return (
-          <Tag
-            className="w-full h-full resize-none bg-transparent outline-none p-1"
-            contentEditable
-            onInput={(e) =>
-              onUpdate(element.id, {
-                data: {
-                  ...element.data,
-                  text: e.currentTarget.textContent || "",
-                },
-              })
-            }
-            style={{
-              color: element.data.color,
-              fontSize: element.data.fontSize,
-              fontWeight: element.data.isBold ? "bold" : "normal",
-              fontStyle: element.data.isItalic ? "italic" : "normal",
-            }}
-            onMouseDown={(e) => {
-              if (e.target === e.currentTarget) {
-                e.stopPropagation();
-              }
-            }}
-            suppressContentEditableWarning={true}
-          >
-            {element.data.text }
-          </Tag>
-        );
-
+     
       case "image":
         if (element.data.src) {
           return (

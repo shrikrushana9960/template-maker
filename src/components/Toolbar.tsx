@@ -141,7 +141,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
           title={modal.title}
           message={modal.message}
           type={modal.type}
-          onConfirm={modal.onConfirm as  ((inputValue?: string) => void) | (() => void)}
+          onConfirm={
+            modal.onConfirm as ((inputValue?: string) => void) | (() => void)
+          }
           onCancel={() => setModal(null)}
         />
       )}
@@ -161,20 +163,22 @@ const Toolbar: React.FC<ToolbarProps> = ({
           {/* File Section */}
           <div className="flex flex-col items-center">
             <span className="text-xs font-semibold text-gray-500">File</span>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-4 p-2 bg-white">
+            
               <button
                 onClick={onNewTemplate}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+                className="flex flex-col items-center p-3 rounded-md hover:bg-gray-100 transition-colors"
               >
-                <img src={New} />
+                <img src={New} alt="New" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">New</span>
               </button>
 
+             
               <button
                 onClick={handleImportClick}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+                className="flex flex-col items-center p-3 rounded-md hover:bg-gray-100 transition-colors"
               >
-                <img src={Load} />
+                <img src={Load} alt="Load" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Load</span>
               </button>
 
@@ -186,33 +190,34 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 onChange={handleFileChange}
               />
 
+             
               <button
                 onClick={handleSaveTemplate}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+                className="flex flex-col items-center p-3 rounded-md hover:bg-gray-100 transition-colors"
               >
-                <img src={Save} />
+                <img src={Save} alt="Save" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Save</span>
               </button>
 
+            
               <button
                 onClick={onSaveTemplate}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+                className="flex flex-col items-center p-3 rounded-md hover:bg-gray-100 transition-colors text-center"
               >
-                <img src={Download} alt="Export PDF" className="w-6 h-6" />
-                <span className="text-xs text-gray-700 mt-1">
-                  Download template
+                <img
+                  src={Download}
+                  alt="Download template"
+                  className="w-6 h-6"
+                />
+                <span className="text-xs text-gray-700 mt-1 text-center">
+                  Download
                 </span>
               </button>
-              <button
-                onClick={onAutofill}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
-              >
-                <img src={Download} alt="Autofill" className="w-6 h-6" />
-                <span className="text-xs text-gray-700 mt-1">Autofill</span>
-              </button>
+
+              {/* Export PDF */}
               <button
                 onClick={onExportPdf}
-                className="flex flex-col items-center p-2 rounded-md hover:bg-gray-100 transition-colors"
+                className="flex flex-col items-center p-3 rounded-md hover:bg-gray-100 transition-colors"
               >
                 <img src={Export} alt="Export PDF" className="w-6 h-6" />
                 <span className="text-xs text-gray-700 mt-1">Export PDF</span>

@@ -260,9 +260,9 @@ const Editor: React.FC<EditorProps> = ({
               style={{
                 gridArea: cell.toLowerCase(),
                 backgroundColor: currentPage.gridColor,
-                position: 'relative', // Important for containing absolute elements
+                position: 'relative', 
                 minHeight: '200px',
-                overflow: 'hidden', // Prevent elements from visually overflowing
+                overflow: 'hidden', 
               }}
               onClick={(e) => handleContainerClick(e, cell)}
             >

@@ -274,6 +274,7 @@ const Editor: React.FC<EditorProps> = ({
                     element={element}
                     onMouseDown={handleMouseDown}
                     onUpdate={onElementUpdate}
+                    onDelete={onElementDelete}
                   />
                 ))
               }

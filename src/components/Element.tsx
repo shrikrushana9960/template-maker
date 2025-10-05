@@ -1,17 +1,19 @@
 import React, { useRef, useEffect } from "react";
 import Chart from "chart.js/auto";
 import type { ElementData } from "../types";
-
+import Delete from "../assets/delete.svg";
 interface ElementProps {
   element: ElementData;
   onMouseDown: (e: React.MouseEvent, element: ElementData) => void;
   onUpdate: (id: string, updates: Partial<ElementData>) => void;
+  onDelete: (id: string) => void;
 }
 
 const Element: React.FC<ElementProps> = ({
   element,
   onMouseDown,
   onUpdate,
+  onDelete,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<HTMLCanvasElement | null>(null);
@@ -99,7 +101,6 @@ const Element: React.FC<ElementProps> = ({
           />
         );
 
-     
       case "image":
         if (element.data.src) {
           return (
@@ -189,7 +190,10 @@ const Element: React.FC<ElementProps> = ({
         return null;
     }
   };
-
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete(element.id);
+  };
   const resizeHandles = [
     "top-left",
     "top-right",
@@ -211,10 +215,25 @@ const Element: React.FC<ElementProps> = ({
         width: `${element.width}px`,
         height: `${element.height}px`,
       }}
-      // 
+      //
     >
-      <div onMouseDown={handleMouseDown} className="element-id-label">ID: {element.id.slice(0, 6)}</div>
-
+      <div onMouseDown={handleMouseDown} className="element-id-label">
+        ID: {element.id.slice(0, 6)}  
+      </div>
+      <button
+        onClick={handleDeleteClick}
+         className="element-id-delete"
+        title="Delete Element"
+        style={{
+          width: "20px",
+          height: "20px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+       <img src={Delete} alt="Export PDF" className="w-3 h-6" />
+      </button>
       {resizeHandles.map((direction) => (
         <div
           key={direction}
@@ -223,7 +242,11 @@ const Element: React.FC<ElementProps> = ({
         />
       ))}
 
-      <div   onMouseDown={handleMouseDown} ref={contentRef} className="w-full h-full overflow-hidden">
+      <div
+        onMouseDown={handleMouseDown}
+        ref={contentRef}
+        className="w-full h-full overflow-hidden"
+      >
         {renderContent()}
       </div>
     </div>

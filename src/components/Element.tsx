@@ -215,9 +215,10 @@ const Element: React.FC<ElementProps> = ({
         width: `${element.width}px`,
         height: `${element.height}px`,
       }}
-      //
+      // 
+      onMouseDown={handleMouseDown}
     >
-      <div onMouseDown={handleMouseDown} className="element-id-label">
+      <div onMouseDown={handleMouseDown}  className="element-id-label">
         ID: {element.id.slice(0, 6)}  
       </div>
       <button

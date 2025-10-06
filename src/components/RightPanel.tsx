@@ -530,107 +530,128 @@ const RightPanel: React.FC<RightPanelProps> = ({
           </>
         )}
         {localElement.type === "table" && (
-          <div className="space-y-4 overflow-auto max-h-[70vh]">
-            <div>
-              <label className="text-sm font-medium text-gray-700 block mb-2">
-                Table Data
-              </label>
+  <div className="space-y-4 overflow-auto max-h-[70vh]">
+    <div>
+      <label className="text-sm font-medium text-gray-700 block mb-2">
+        Table Data
+      </label>
 
-              <div className="overflow-x-auto border rounded-lg">
-                <table className="border-collapse border border-gray-300 w-full text-sm">
-                  <tbody>
-                    {(localElement.data.table || []).map(
-                      (row: string[], rowIndex: number) => (
-                        <tr key={rowIndex}>
-                          {row.map((cell: string, colIndex: number) => (
-                            <td
-                              key={colIndex}
-                              className="border border-gray-300 p-0"
-                            >
-                              <input
-                                type="text"
-                                value={cell}
-                                onChange={(e) => {
-                                  const newTable = [
-                                    ...(localElement.data.table || []),
-                                  ];
-                                  newTable[rowIndex][colIndex] = e.target.value;
-                                  handleElementUpdate({
-                                    data: {
-                                      ...localElement.data,
-                                      table: newTable,
-                                    },
-                                  });
-                                }}
-                                className="w-full h-10 px-2 outline-none focus:bg-yellow-50"
-                              />
-                            </td>
-                          ))}
+      <div className="overflow-x-auto border rounded-lg">
+        <table className="border-collapse border border-gray-300 w-full text-sm">
+          <tbody>
+            {(localElement.data.table || []).map(
+              (row: string[], rowIndex: number) => (
+                <tr key={rowIndex}>
+                  {row.map((cell: string, colIndex: number) => (
+                    <td
+                      key={colIndex}
+                      className="border border-gray-300 p-0"
+                    >
+                      <input
+                        type="text"
+                        value={cell}
+                        onChange={(e) => {
+                          const newTable = [...(localElement.data.table || [])];
+                          newTable[rowIndex][colIndex] = e.target.value;
+                          handleElementUpdate({
+                            data: {
+                              ...localElement.data,
+                              table: newTable,
+                            },
+                          });
+                        }}
+                        className="w-full h-10 px-2 outline-none focus:bg-yellow-50"
+                      />
+                    </td>
+                  ))}
+               
+                </tr>
+              )
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <div >
+  
+</div>
 
-                          {/* Add column button only in first row */}
-                          {rowIndex === 0 && (
-                            <td className="border border-gray-300">
-                              <button
-                                onClick={() => {
-                                  const newTable = (
-                                    localElement.data.table || []
-                                  ).map((r: string[]) => [...r, ""]);
-                                  handleElementUpdate({
-                                    data: {
-                                      ...localElement.data,
-                                      table: newTable,
-                                    },
-                                  });
-                                }}
-                                className="px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
-                              >
-                                + Col
-                              </button>
-                            </td>
-                          )}
-                        </tr>
-                      )
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+<div className="flex flex-col items-center justify-center gap-2 bg-gray-50 p-4 rounded-lg shadow-sm">
+  {/* Row 1 - Column Controls */}
+  <div className="flex items-center justify-center gap-3 w-full">
+    <button
+      onClick={() => {
+        const newTable = (localElement.data.table || []).map((r: string[]) => [...r, ""]);
+        handleElementUpdate({
+          data: { ...localElement.data, table: newTable },
+        });
+      }}
+      className="flex items-center justify-center gap-1 px-4 py-1.5 bg-green-500 text-white text-xs font-medium rounded-md shadow-sm 
+                 hover:bg-green-600 hover:shadow-md active:scale-95 cursor-pointer transition-all duration-200"
+    >
+      <span className="text-sm leading-none">＋</span> Add Column
+    </button>
 
-            {/* Row controls */}
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => {
-                  const newTable = [
-                    ...(localElement.data.table || []),
-                    new Array(localElement.data.table?.[0]?.length || 1).fill(
-                      ""
-                    ),
-                  ];
-                  handleElementUpdate({
-                    data: { ...localElement.data, table: newTable },
-                  });
-                }}
-                className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
-              >
-                + Row
-              </button>
+    <button
+      onClick={() => {
+        const newTable = (localElement.data.table || []).map((r: string[]) => {
+          const newRow = [...r];
+          newRow.pop();
+          return newRow;
+        });
+        handleElementUpdate({
+          data: { ...localElement.data, table: newTable },
+        });
+      }}
+      disabled={(localElement.data.table?.[0]?.length || 0) <= 1}
+      className="flex items-center justify-center gap-1 px-4 py-1.5 bg-red-500 text-white text-xs font-medium rounded-md shadow-sm 
+                 hover:bg-red-600 hover:shadow-md active:scale-95 cursor-pointer transition-all duration-200 
+                 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <span className="text-sm leading-none">−</span> Remove Column
+    </button>
+  </div>
 
-              <button
-                onClick={() => {
-                  const newTable = [...(localElement.data.table || [])];
-                  newTable.pop();
-                  handleElementUpdate({
-                    data: { ...localElement.data, table: newTable },
-                  });
-                }}
-                className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 disabled:opacity-50"
-                disabled={(localElement.data.table || []).length <= 1}
-              >
-                - Row
-              </button>
-            </div>
-          </div>
-        )}
+  {/* Row 2 - Row Controls */}
+  <div className="flex items-center justify-center gap-3 w-full">
+    <button
+      onClick={() => {
+        const newTable = [
+          ...(localElement.data.table || []),
+          new Array(localElement.data.table?.[0]?.length || 1).fill(""),
+        ];
+        handleElementUpdate({
+          data: { ...localElement.data, table: newTable },
+        });
+      }}
+      className="flex items-center justify-center gap-1 px-4 py-1.5 bg-blue-500 text-white text-xs font-medium rounded-md shadow-sm 
+                 hover:bg-blue-600 hover:shadow-md active:scale-95 cursor-pointer transition-all duration-200"
+    >
+      <span className="text-sm leading-none">＋</span> Add Row
+    </button>
+
+    <button
+      onClick={() => {
+        const newTable = [...(localElement.data.table || [])];
+        newTable.pop();
+        handleElementUpdate({
+          data: { ...localElement.data, table: newTable },
+        });
+      }}
+      disabled={(localElement.data.table || []).length <= 1}
+      className="flex items-center justify-center gap-1 px-4 py-1.5 bg-red-500 text-white text-xs font-medium rounded-md shadow-sm 
+                 hover:bg-red-600 hover:shadow-md active:scale-95 cursor-pointer transition-all duration-200 
+                 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <span className="text-sm leading-none">−</span> Remove Row
+    </button>
+  </div>
+</div>
+
+
+  </div>
+)}
+
 
         {localElement.type === "chart" && (
           <div className="space-y-4">

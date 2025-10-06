@@ -215,15 +215,15 @@ const Element: React.FC<ElementProps> = ({
         width: `${element.width}px`,
         height: `${element.height}px`,
       }}
-      // 
+      //
       onMouseDown={handleMouseDown}
     >
-      <div onMouseDown={handleMouseDown}  className="element-id-label">
-        ID: {element.id.slice(0, 6)}  
+      <div onMouseDown={handleMouseDown} className="element-id-label">
+        ID: {element.id.slice(0, 6)}
       </div>
       <button
         onClick={handleDeleteClick}
-         className="element-id-delete"
+        className="element-id-delete"
         title="Delete Element"
         style={{
           width: "20px",
@@ -233,7 +233,7 @@ const Element: React.FC<ElementProps> = ({
           justifyContent: "center",
         }}
       >
-       <img src={Delete} alt="Export PDF" className="w-3 h-6" />
+        <img src={Delete} alt="Export PDF" className="w-3 h-6" />
       </button>
       {resizeHandles.map((direction) => (
         <div

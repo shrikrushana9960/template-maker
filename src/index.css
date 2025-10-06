@@ -198,9 +198,12 @@ body {
   font-size: 8px;
   padding: 2px 4px;
   border-radius: 4px;
-  /* pointer-events: none; */
+  pointer-events: none;
   z-index: 9;
   cursor: pointer;
+}
+.element-container:hover .element-id-delete {
+  opacity: 1;
 }
 .right-panel-container {
   width: 320px;

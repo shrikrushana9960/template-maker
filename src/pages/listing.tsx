@@ -10,7 +10,7 @@ import {
 } from "../utils/serverApi";
 import Modal from "../components/Modal";
 import investSet from "../assets/investSet.png";
-import reportDataJson from './reportData.json';
+import reportDataJson from "./reportData.json";
 import Delete from "../assets/delete.svg";
 import { exportAsPdf } from "../utils/exportUtils";
 import Edit from "../assets/editIcon.svg";
@@ -29,7 +29,7 @@ interface ModalConfig {
   title: string;
   message: string;
   type: "info" | "confirm" | "input";
-  onConfirm: ((inputValue?: string) => void) | (() => void); 
+  onConfirm: ((inputValue?: string) => void) | (() => void);
   onCancel?: () => void;
   placeholder?: string;
 }
@@ -62,7 +62,6 @@ const LoadingOverlay: React.FC<{ message?: string }> = ({ message }) => (
     </div>
   </div>
 );
-
 
 const ListingScreen: React.FC = () => {
   const reportData: any = reportDataJson;
@@ -124,22 +123,20 @@ const ListingScreen: React.FC = () => {
 
   // FIX: Replaced applyAutofillToPages with logic that uses structured data
   const applyReportFillToPages = (pages: PageData[]): PageData[] => {
-   
-
     return pages.map((page) => {
-      const elementCounters: Record<ElementData["type"], number> = {
-        header: 0,
-        text: 0,
-        table: 0,
-        chart: 0,
-        image: 0,
-      };
+      // const elementCounters: Record<ElementData["type"], number> = {
+      //   header: 0,
+      //   text: 0,
+      //   table: 0,
+      //   chart: 0,
+      //   image: 0,
+      // };
 
       return {
         ...page,
         elements: page.elements.map((element) => {
-          const elementIndex = elementCounters[element.type]++;
-          let newUpdates: Partial<ElementData> = {};
+          // const elementIndex = elementCounters[element.type]++;
+          const newUpdates: Partial<ElementData> = {};
           console.log(element?.id);
           switch (element.type) {
             case "text":
@@ -150,36 +147,34 @@ const ListingScreen: React.FC = () => {
               break;
 
             case "image":
-                newUpdates.data = {
-                  ...element.data,
-                  src: reportData[element?.id] || "",
-                };
+              newUpdates.data = {
+                ...element.data,
+                src: reportData[element?.id] || "",
+              };
               break;
 
             case "table":
-            
-                newUpdates.data = {
-                  ...element.data,
-                  table: reportData[element?.id] || [],
-                };
-             
+              newUpdates.data = {
+                ...element.data,
+                table: reportData[element?.id] || [],
+              };
+
               break;
 
             case "chart":
-                newUpdates.data = {
-                  ...element.data,
-                  labels: reportData?.[element?.id]?.labels || [],
-                  chartType: element.data.chartType || "pie",
-                  datasets: [
-                    {
-                      label: "",
-                      data: reportData?.[element?.id]?.data || [],
-                      backgroundColor:
-                        reportData?.[element?.id]?.colors || [],
-                    },
-                  ],
-                };
-           
+              newUpdates.data = {
+                ...element.data,
+                labels: reportData?.[element?.id]?.labels || [],
+                chartType: element.data.chartType || "pie",
+                datasets: [
+                  {
+                    label: "",
+                    data: reportData?.[element?.id]?.data || [],
+                    backgroundColor: reportData?.[element?.id]?.colors || [],
+                  },
+                ],
+              };
+
               break;
 
             default:
@@ -208,7 +203,10 @@ const ListingScreen: React.FC = () => {
 
       // 3. Export as PDF
       toastr.info("Generating PDF...");
-      await exportAsPdf(mockedPages,template.name+(new Date().toISOString())+".pdf");
+      await exportAsPdf(
+        mockedPages,
+        template.name + new Date().toISOString() + ".pdf"
+      );
 
       toastr.success(
         `Mock data applied and PDF exported successfully for "${template.name}"!`

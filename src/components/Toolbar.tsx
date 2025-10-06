@@ -51,14 +51,14 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onDeletePage,
   onPrevPage,
   onNextPage,
-  onAutofill,
+  // onAutofill,
   currentPage,
   totalPages,
 }) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const [loading, setLoading] = useState(false);
-  const [saveLoading, setSaveLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  // const [saveLoading, setSaveLoading] = useState(false);
   const navigate = useNavigate();
   const [modal, setModal] = useState<ModalConfig | null>(null);
   const queryParams = new URLSearchParams(location.search);
@@ -80,7 +80,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
         onConfirm: async (templateName: string) => {
           if (!templateName) return;
 
-          setSaveLoading(true);
+          // setSaveLoading(true);
           try {
             await saveTemplateToServer(templateName, currentPages);
             navigate("/");
@@ -94,7 +94,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
               }`
             );
           } finally {
-            setSaveLoading(false);
+            // setSaveLoading(false);
           }
         },
         onCancel: () => setModal(null),
@@ -150,7 +150,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-6">
           <div
-            className="overflow-hidden cursor-pointer flex items-center"
+            className="cursor-pointer flex items-center"
             onClick={() => navigate("/")}
           >
             <img
@@ -163,8 +163,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
           {/* File Section */}
           <div className="flex flex-col items-center">
             <span className="text-xs font-semibold text-gray-500">File</span>
-            <div className="flex items-center gap-4 p-2 bg-white">
-            
+            <div className="flex items-center bg-white">
               <button
                 onClick={onNewTemplate}
                 className="flex flex-col items-center p-3 rounded-md hover:bg-gray-100 transition-colors"
@@ -173,7 +172,6 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 <span className="text-xs text-gray-700 mt-1">New</span>
               </button>
 
-             
               <button
                 onClick={handleImportClick}
                 className="flex flex-col items-center p-3 rounded-md hover:bg-gray-100 transition-colors"
@@ -190,7 +188,6 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 onChange={handleFileChange}
               />
 
-             
               <button
                 onClick={handleSaveTemplate}
                 className="flex flex-col items-center p-3 rounded-md hover:bg-gray-100 transition-colors"
@@ -199,7 +196,6 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 <span className="text-xs text-gray-700 mt-1">Save</span>
               </button>
 
-            
               <button
                 onClick={onSaveTemplate}
                 className="flex flex-col items-center p-3 rounded-md hover:bg-gray-100 transition-colors text-center"

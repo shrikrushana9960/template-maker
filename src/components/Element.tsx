@@ -223,7 +223,7 @@ const Element: React.FC<ElementProps> = ({
       </div>
       <button
         onClick={handleDeleteClick}
-        className="element-id-delete"
+      className="element-id-delete opacity-0 group-hover:opacity-100 transition-opacity duration-200 absolute top-1 right-1 bg-white rounded-full shadow p-1"
         title="Delete Element"
         style={{
           width: "20px",

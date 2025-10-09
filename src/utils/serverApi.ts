@@ -8,7 +8,7 @@ export interface Template {
   pages: string; // JSON string of PageData[]
 }
 
-const API_BASE = "http://localhost:3001";
+const API_BASE = "http://43.241.63.71:3006/";
 const API_URL = `${API_BASE}/templates`;
 
 // ✅ Check if server is available

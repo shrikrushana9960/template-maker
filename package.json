@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
- "dev": "concurrently \"vite\" \"json-server --watch db.json --port 3001 --host localhost\"",
+ "dev": "vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "start": "json-server --watch db.json --port 3001 --cors",
+    "start": "json-server --watch db.json --port 3001 --host",
     "preview": "vite preview"
   },
   "dependencies": {

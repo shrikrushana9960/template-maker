@@ -16,5 +16,6 @@ COPY . .
 # Expose ports for Vite and JSON Server
 EXPOSE 5173 3001
 
-CMD ["npm", "run", "dev"]
+CMD ["npx", "concurrently", "\"npm run dev\"", "\"npm run start\""]
+
 
